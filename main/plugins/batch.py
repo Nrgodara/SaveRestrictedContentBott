@@ -42,7 +42,7 @@ async def _batch(event):
         await event.reply(r)
         return       
     if event.sender_id in batch:
-        return await event.reply("You've already started one batch, wait for it to complete you dumbfuck owner!")
+        return await event.reply("अरे! दादा आराम से, पहले वाले को Cancel ❌ कर पहले")
     async with Drone.conversation(event.chat_id) as conv: 
         if s != True:
             await conv.send_message("Send me the message link you want to start saving from, as a reply to this message.", buttons=Button.force_reply())
@@ -55,19 +55,19 @@ async def _batch(event):
                     return conv.cancel()
             except Exception as e:
                 print(e)
-                await conv.send_message("Cannot wait more longer for your response!")
+                await conv.send_message("मैं औकात दिखा दी मारी पाछो भेज /batch 👿")
                 return conv.cancel()
             await conv.send_message("Send me the number of files/range you want to save from the given message, as a reply to this message.", buttons=Button.force_reply())
             try:
                 _range = await conv.get_reply()
             except Exception as e:
                 print(e)
-                await conv.send_message("Cannot wait more longer for your response!")
+                await conv.send_message("Cannot wait more try again  send again /start /batch ")
                 return conv.cancel()
             try:
                 value = int(_range.text)
-                if value > 100:
-                    await conv.send_message("You can only get upto 100 files in a single batch.")
+                if value > 1000:
+                    await conv.send_message("बस कर भाई ठावस राख 500 भेज.")
                     return conv.cancel()
             except ValueError:
                 await conv.send_message("Range must be an integer!")
@@ -81,11 +81,11 @@ async def run_batch(userbot, client, sender, link, _range):
     for i in range(_range):
         timer = 60
         if i < 25:
-            timer = 5
+            timer = 1
         if i < 50 and i > 25:
-            timer = 10
+            timer = 2
         if i < 100 and i > 50:
-            timer = 15
+            timer = 3
         if not 't.me/c/' in link:
             if i < 25:
                 timer = 2
