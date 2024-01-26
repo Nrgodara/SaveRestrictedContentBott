@@ -44,6 +44,6 @@ async def remt(event):
   
 @Drone.on(events.NewMessage(incoming=True, pattern=f"{S}"))
 async def start(event):
-    text = "Send me Link of any message to clone it here, For private channel message, send invite link first.\n\n**SUPPORT:** @TeamDrone"
+    text = "<b>Hello Boss🤗</b> \nSend me Link of any message to clone it here, For private channel message, <b> send invite link first.</b> \n\n**MAHI®** "
     await start_srb(event, text)
     
