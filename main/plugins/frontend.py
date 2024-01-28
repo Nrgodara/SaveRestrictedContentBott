@@ -21,19 +21,29 @@ message = "Send me the message link you want to start saving from, as a reply to
 async def clone(event):
     if event.is_reply:
         reply = await event.get_reply_message()
-        if reply.text == message:
+        if reply and reply.text == message:
             return
+    elif event.text == "/start":
+        # Handle start command logic here
+        pass
+    elif event.text.startswith("/batch"):
+        # Handle batch command logic here
+        pass
+
     try:
         link = get_link(event.text)
         if not link:
             return
     except TypeError:
         return
+
     s, r = await force_sub(event.client, fs, event.sender_id, ft)
-    if s == True:
+    if s:
         await event.reply(r)
         return
+
     edit = await event.reply("Processing!")
+
     try:
         if 't.me/+' in link:
             q = await join(userbot, link)
