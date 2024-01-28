@@ -41,6 +41,9 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
         file = ""
         try:
             msg = await userbot.get_messages(chat, msg_id)
+            if not msg:
+                print(f"Message not found: {msg_link}")
+                return  # Skip/Ignore if the message doesn't exist
             if msg.media:
                 if msg.media==MessageMediaType.WEB_PAGE:
                     edit = await client.edit_message_text(sender, edit_id, "Cloning.")
