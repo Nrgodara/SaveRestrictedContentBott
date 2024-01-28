@@ -26,17 +26,24 @@ ft = f"To use this bot you've to join @{fs}."
 
 batch = []
 
+# Replace the existing event handlers with these modified versions
+
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/cancel'))
 async def cancel(event):
+    if not (event.is_private or event.is_channel):
+        return
     if not event.sender_id in batch:
         return await event.reply("No batch active.")
     batch.clear()
     await event.reply("Done.")
-    
+
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
 async def _batch(event):
-    if not event.is_private:
+    if not (event.is_private or event.is_channel):
         return
+    # Rest of your code.
+
+ 
     s, r = await force_sub(event.client, fs, event.sender_id, ft) 
     if s == True:
         await event.reply(r)
