@@ -1,4 +1,4 @@
-#Github.com/Vasusen-code
+# Github.com/Vasusen-code
 
 import time, os
 
@@ -18,7 +18,7 @@ ft = f"To use this bot you've to join @{fs}."
 message = "Send me the message link you want to start saving from, as a reply to this message."
 
 @Drone.on(events.NewMessage(incoming=True, func=lambda e: e.is_private or e.is_channel))
-  async def clone(event):
+async def clone(event):
     if event.is_reply:
         reply = await event.get_reply_message()
         if reply.text == message:
@@ -46,4 +46,3 @@ message = "Send me the message link you want to start saving from, as a reply to
     except Exception as e:
         print(e)
         await Drone.send_message(event.sender_id, f"An error occurred during cloning of `{link}`\n\n**Error:** {str(e)}")
-    
