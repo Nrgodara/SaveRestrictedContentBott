@@ -1,5 +1,5 @@
-#Tg:MaheshChauhan/DroneBots
-#Github.com/Vasusen-code
+# Tg:MaheshChauhan/DroneBots
+# Github.com/Vasusen-code
 
 """
 Plugin for both public & private channels!
