@@ -1,6 +1,3 @@
-#Tg:MaheshChauhan/DroneBots
-#Github.com/Vasusen-code
-
 """
 Plugin for both public & private channels!
 """
@@ -33,8 +30,6 @@ ft = f"To use this bot you've to join @{fs}."
 
 batch = []
 
-# Replace the existing event handlers with these modified versions
-
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/cancel'))
 async def cancel(event):
     if not (event.is_private or event.is_channel):
@@ -48,8 +43,7 @@ async def cancel(event):
 async def _batch(event):
     if not (event.is_private or event.is_channel):
         return
-    # Rest of your code.
- 
+    
     s, r = await force_sub(event.client, fs, event.sender_id, ft) 
     if s == True:
         await event.reply(r)
@@ -115,18 +109,28 @@ async def _batch(event):
                         
                         # Edit the message with the new caption
                         await message.edit(caption=new_caption)
-                        
-                        # Continue the batch process
-                        batch.append(event.sender_id)
-                        await run_batch(userbot, Bot, event.sender_id, _link, value) 
-                        conv.cancel()
-                        batch.clear()
-                        break
+
+                        if replace_response.text.lower() in ['yes', 'y']:
+                            # Continue the batch process
+                            batch.append(event.sender_id)
+                            await run_batch(userbot, Bot, event.sender_id, _link, value) 
+                            conv.cancel()
+                            batch.clear()
+                            break
                 else:
                     await conv.send_message("Error: No message found with the specified caption.")
                     conv.cancel()
                     batch.clear()
-# ...
+            else:
+                # If the user responds with "No"
+                # Continue with the batch process without replacement
+                batch.append(event.sender_id)
+                await run_batch(userbot, Bot, event.sender_id, _link, value) 
+                conv.cancel()
+                batch.clear()
+                break
+
+# The rest of the code from the previous snippet...
 
 async def run_batch(userbot, client, sender, link, _range):
     for i in range(_range):
@@ -184,10 +188,34 @@ async def cleanup(event):
 
     await event.reply("Cleanup completed.")
 
-# Additional error handling
-@Drone.on(events.ChatAction())
-async def chat_action_handler(event):
-    # Handle chat actions, if needed
-    pass
 
-# ...
+
+# Additional error handling
+@Drone.on_message(filters.chat_action)
+async def chat_action_handler(client, event):
+    try:
+        # Your existing code here
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Error handling and cleanup after batch completion
+@Drone.on(events.NewMessage(incoming=True, pattern='/cleanup'))
+async def cleanup(event):
+    if not event.is_private:
+        return
+    
+    # Clear the batch list
+    batch.clear()
+    
+    # Delete the replaceit and replacewith files
+    try:
+        os.remove(REPLACEIT_PATH)
+    except FileNotFoundError:
+        pass
+
+    try:
+        os.remove(REPLACEWITH_PATH)
+    except FileNotFoundError:
+        pass
+
+    await event.reply("Cleanup completed.")
