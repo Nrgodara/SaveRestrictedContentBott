@@ -123,10 +123,15 @@ from pyrogram import filters
 
 from pyrogram import filters
 
+from pyrogram import filters
+
 @Drone.on_message(filters.chat_action)
 async def chat_action_handler(client, event):
-    # Handle chat actions, if needed
-    pass
+    try:
+        # Your existing code here
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 
 # Error handling and cleanup after batch completion
 @Drone.on(events.NewMessage(incoming=True, pattern='/cleanup'))
