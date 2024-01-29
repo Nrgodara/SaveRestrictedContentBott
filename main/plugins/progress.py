@@ -34,10 +34,14 @@ async def progress_for_pyrogram(
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
 
-        progress = "**[{0}{1}]** `| {2}%`\n\n".format(
-            ''.join([FINISHED_PROGRESS_STR for i in range(math.floor(percentage / 10))]),
-            ''.join([UN_FINISHED_PROGRESS_STR for i in range(10 - math.floor(percentage / 10))]),
-            round(percentage, 2))
+        # Choose colors for the progress bar
+        progress_colors = [
+            "#ff0000", "#ff3300", "#ff6600", "#ff9900", "#ffcc00",
+            "#ffff00", "#ccff00", "#99ff00", "#66ff00", "#33ff00"
+        ]
+
+        # Create a colorful progress bar
+        progress = f"**[{progress_colors[math.floor(percentage / 10)]}{UN_FINISHED_PROGRESS_STR}]** `| {round(percentage, 2)}%`\n\n"
 
         tmp = progress + "GROSSS: {0} of {1}\n\nSpeed: {2}/s\n\nETA: {3}\n".format(
             humanbytes(current),
