@@ -119,7 +119,7 @@ async def _batch(event):
 
 
 # Additional error handling
-@Drone.on(events.ChatAction())
+@Drone.on(events.ChatAction)
 async def chat_action_handler(event):
     # Handle chat actions, if needed
     pass
