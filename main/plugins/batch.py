@@ -110,4 +110,36 @@ async def run_batch(userbot, client, sender, link, _range):
         protection = await client.send_message(sender, f"Sleeping for `{timer}` seconds to avoid Floodwaits and Protect account!")
         await asyncio.sleep(timer)
         await protection.delete()
+                            with open("downloads/replacewith.txt", "r") as replace_file:
+                        replace_with_text = replace_file.read()
+
+                    # Edit the caption of the new sent message
+                    await client.edit_message_caption(sender, new_message.id,
+                                                      caption=new_message.caption.replace(replace_from_text,
+                                                                                            replace_with_text))
+                except FloodWait as fw:
+                    if int(fw.x) > 299:
+                        await client.send_message(sender,
+                                                  "Cancelling batch since you have floodwait more than 5 minutes.")
+                        break
+                    await asyncio.sleep(fw.x + 5)
+                    await get_bulk_msg(userbot, client, sender, link, j)
+                protection = await client.send_message(sender,
+                                                       f"Sleeping for `{timer}` seconds to avoid Floodwaits and Protect account!")
+                await asyncio.sleep(timer)
+                await protection.delete()
+
+            # Delete the data saved in downloads
+            os.remove("downloads/replaceit.txt")
+            os.remove("downloads/replacewith.txt")
+
+        elif response.text.lower() in ['no', 'n']:
+            await conv.send_message("Continuing the batch process without replacing captions.")
+        else:
+            await conv.send_message("Invalid response. Continuing the batch process without replacing captions.")
+
+    except Exception as e:
+        print(e)
+        await conv.send_message("Error processing your response. Continuing the batch process without replacing captions.")
+
             
