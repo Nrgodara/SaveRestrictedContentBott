@@ -1,19 +1,17 @@
-# Github.com/Vasusen-code
+#Github.com/Vasusen-code
 
 import time, os
 
 from .. import bot as Drone
 from .. import userbot, Bot
-from .. import FORCESUB as fs
 from main.plugins.pyroplug import get_msg
 from main.plugins.helpers import get_link, join
 
 from telethon import events
+
 from pyrogram.errors import FloodWait
 
-from ethon.telefunc import force_sub
-
-ft = f"To use this bot you've to join @{fs}."
+ft = "To use this bot, simply send me the message link you want to start saving from."
 
 message = "Send me the message link you want to start saving from, as a reply to this message."
 
@@ -23,27 +21,13 @@ async def clone(event):
         reply = await event.get_reply_message()
         if reply and reply.text == message:
             return
-    elif event.text == "/start":
-        # Handle start command logic here
-        pass
-    elif event.text.startswith("/batch"):
-        # Handle batch command logic here
-        pass
-
     try:
         link = get_link(event.text)
         if not link:
             return
     except TypeError:
         return
-
-    s, r = await force_sub(event.client, fs, event.sender_id, ft)
-    if s:
-        await event.reply(r)
-        return
-
     edit = await event.reply("Processing!")
-
     try:
         if 't.me/+' in link:
             q = await join(userbot, link)
