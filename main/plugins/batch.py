@@ -72,8 +72,12 @@ async def _batch(event):
                 await conv.send_message("मैं औकात दिखा दी मारी पाछो भेज /batch 👿")
                 return conv.cancel()
             
+            # Fetch user information
+            user_info = await event.client.get_entity(event.sender_id)
+            
             # Ask the user if they want to replace any word/sentence in the caption
-            await conv.send_message(f"{event.sender_id.first_name}, Do you want to replace any word/sentence in the caption? (Yes/No)")
+            user_name = user_info.first_name if hasattr(user_info, 'first_name') else "User"
+            await conv.send_message(f"{user_name}, Do you want to replace any word/sentence in the caption? (Yes/No)")
             replace_response = await conv.get_reply()
             
             if replace_response.text.lower() in ['yes', 'y']:
@@ -89,7 +93,7 @@ async def _batch(event):
                             replaceit_file.write(message.caption)
                         
                         # Ask for the text to replace with
-                        await conv.send_message(f"Ok, {event.sender_id.first_name}, Now send me the text you want to Replace with 'send new caption'")
+                        await conv.send_message(f"Ok, {user_name}, Now send me the text you want to Replace with 'send new caption'")
                         replace_with = (await conv.get_reply()).text
                         
                         # Save the text to replace with
@@ -113,6 +117,7 @@ async def _batch(event):
                     conv.cancel()
                     batch.clear()
                     return
+
 
 # Additional error handling
 @Drone.on(events.ChatAction())
