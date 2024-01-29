@@ -161,7 +161,7 @@ async def _batch(event):
                 return
 
 # Additional error handling
-@Drone.on_message(filters.chat_action)
+@Drone.on(events.NewMessage)
 async def chat_action_handler(client, event):
     try:
         # Your existing code here
