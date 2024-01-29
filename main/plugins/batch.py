@@ -163,12 +163,11 @@ async def _batch(event):
 # Additional error handling
 @Drone.on_message(filters.chat_action)
 async def chat_action_handler(client, event):
-    await progress.run(context)
-
-        # Your existing code here
-        pass
+    try:
+        async for message in event.client.iter_messages(link, reverse=True, limit=10):
+            await process_message(message)
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Error processing messages: {e}")
 
 # Error handling and cleanup after batch completion
 @Drone.on(events.NewMessage(incoming=True, pattern='/cleanup'))
