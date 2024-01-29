@@ -3,9 +3,10 @@ import os
 import time
 import json
 
-FINISHED_PROGRESS_STR = "▓"
-UN_FINISHED_PROGRESS_STR = "░"
+FINISHED_PROGRESS_STR = "█"
+UN_FINISHED_PROGRESS_STR = ""
 DOWNLOAD_LOCATION = "/app"
+
 
 async def progress_for_pyrogram(
     current,
@@ -33,24 +34,36 @@ async def progress_for_pyrogram(
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
 
-        progress = "**[{0}{1}]** `| {2}%`\n\n".format(
-            ''.join([FINISHED_PROGRESS_STR for i in range(math.floor(percentage / 5))]),
-            ''.join([UN_FINISHED_PROGRESS_STR for i in range(20 - math.floor(percentage / 5))]),
-            round(percentage, 2))
+        # Choose colors for the progress bar
+        progress_colors = [
+            "#ff0000", "#ff3300", "#ff6600", "#ff9900", "#ffcc00",
+            "#ffff00", "#ccff00", "#99ff00", "#66ff00", "#33ff00"
+        ]
 
-        tmp = (
-            f"**{ud_type}**\n\n"
-            f"**Progress:**\n{progress}\n\n"
-            f"**Size:** `{humanbytes(current)} of {humanbytes(total)}`\n"
-            f"**Speed:** `{humanbytes(speed)}/s`\n"
-            f"**ETA:** `{estimated_total_time}`" if estimated_total_time != '' else ""
+        # Create a colorful progress bar
+        progress = f"**[{progress_colors[math.floor(percentage / 10)]}{UN_FINISHED_PROGRESS_STR}]** `| {round(percentage, 2)}%`\n\n"
+
+        tmp = progress + "GROSSS: {0} of {1}\n\nSpeed: {2}/s\n\nETA: {3}\n".format(
+            humanbytes(current),
+            humanbytes(total),
+            humanbytes(speed),
+            estimated_total_time if estimated_total_time != '' else "0 s"
         )
-
         try:
             if not message.photo:
-                await message.edit_text(text=tmp)
+                await message.edit_text(
+                    text="{}\n {}".format(
+                        ud_type,
+                        tmp
+                    )
+                )
             else:
-                await message.edit_caption(caption=tmp)
+                await message.edit_caption(
+                    caption="{}\n {}".format(
+                        ud_type,
+                        tmp
+                    )
+                )
         except:
             pass
 
@@ -60,11 +73,11 @@ def humanbytes(size):
         return ""
     power = 2**10
     n = 0
-    Dic_powerN = {0: 'B', 1: 'KiB', 2: 'MiB', 3: 'GiB', 4: 'TiB'}
+    Dic_powerN = {0: ' ', 1: 'Ki', 2: 'Mi', 3: 'Gi', 4: 'Ti'}
     while size > power:
         size /= power
         n += 1
-    return str(round(size, 2)) + " " + Dic_powerN[n]
+    return str(round(size, 2)) + " " + Dic_powerN[n] + 'B'
 
 
 def TimeFormatter(milliseconds: int) -> str:
@@ -72,10 +85,8 @@ def TimeFormatter(milliseconds: int) -> str:
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
     days, hours = divmod(hours, 24)
-    tmp = (
-        ((f"{days}d ") if days else "") +
-        ((f"{hours}h ") if hours else "") +
-        ((f"{minutes}m ") if minutes else "") +
-        ((f"{seconds}s ") if seconds else "")
-    )
-    return tmp.strip()
+    tmp = ((str(days) + "d, ") if days else "") + \
+        ((str(hours) + "h, ") if hours else "") + \
+        ((str(minutes) + "m, ") if minutes else "") + \
+        ((str(seconds) + "s, ") if seconds else "")
+    return tmp[:-2]
