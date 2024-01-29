@@ -132,5 +132,16 @@ async def cleanup(event):
     
     # Clear the batch list
     batch.clear()
+# Delete the replaceit and replacewith files
+    try:
+        os.remove(REPLACEIT_PATH)
+    except FileNotFoundError:
+        pass
 
+    try:
+        os.remove(REPLACEWITH_PATH)
+    except FileNotFoundError:
+        pass
+
+    await event.reply("Cleanup completed.")
                                      
