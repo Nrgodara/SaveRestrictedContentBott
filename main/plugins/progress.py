@@ -3,15 +3,10 @@ import os
 import time
 import json
 
-ANSI_COLOR_CODES = [
-    '\033[91m', '\033[38;5;208m', '\033[38;5;220m', '\033[38;5;184m', '\033[38;5;118m',
-    '\033[38;5;82m', '\033[38;5;70m', '\033[38;5;34m', '\033[38;5;22m', '\033[92m'
-]
-
 FINISHED_PROGRESS_STR = "█"
-UN_FINISHED_PROGRESS_STR = ""
+UN_FINISHED_PROGRESS_STR = " "
 DOWNLOAD_LOCATION = "/app"
-
+MAHI_NAME = "**MAHI®**"
 
 async def progress_for_pyrogram(
     current,
@@ -25,7 +20,6 @@ async def progress_for_pyrogram(
     diff = now - start
     if round(diff % 10.00) == 0 or current == total:
         percentage = current * 100 / total
-        index = math.floor(percentage / 10) % len(ANSI_COLOR_CODES)
         status = DOWNLOAD_LOCATION + "/status.json"
         if os.path.exists(status):
             with open(status, 'r+') as f:
@@ -40,32 +34,35 @@ async def progress_for_pyrogram(
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
 
-        progress = f"{ANSI_COLOR_CODES[index]}{FINISHED_PROGRESS_STR}\033[0m | {round(percentage, 2)}%\n\n"
-
-        tmp = progress + "GROSSS: {0} of {1}\n\nSpeed: {2}/s\n\nETA: {3}\n".format(
+        progress = "🔃 📤 𝔽𝕀𝕃𝔼 𝕊𝕐ℕℂ 📤 🔃\n ├ •**Expect The Unexpected 🫰❤️‍🔥** •┤\n ├[{0}{1}] | {2}%\n ├❤️‍🔥\n ├📁 GROSSS: {3} of {4}\n ├⚡\n ├🚀 Speed: {5}/s\n ├📟\n ├🕒 ETA: {6}".format(
+            ''.join([FINISHED_PROGRESS_STR for i in range(math.floor(percentage / 10))]),
+            ''.join([UN_FINISHED_PROGRESS_STR for i in range(10 - math.floor(percentage / 10))]),
+            round(percentage, 2),
             humanbytes(current),
             humanbytes(total),
             humanbytes(speed),
             estimated_total_time if estimated_total_time != '' else "0 s"
         )
+
         try:
             if not message.photo:
                 await message.edit_text(
                     text="{}\n {}".format(
                         ud_type,
-                        tmp
+                        progress
                     )
                 )
             else:
                 await message.edit_caption(
                     caption="{}\n {}".format(
                         ud_type,
-                        tmp
+                        progress
                     )
                 )
         except:
             pass
 
+# Add your existing helper functions here
 
 def humanbytes(size):
     if not size:
@@ -77,7 +74,6 @@ def humanbytes(size):
         size /= power
         n += 1
     return str(round(size, 2)) + " " + Dic_powerN[n] + 'B'
-
 
 def TimeFormatter(milliseconds: int) -> str:
     seconds, milliseconds = divmod(int(milliseconds), 1000)
