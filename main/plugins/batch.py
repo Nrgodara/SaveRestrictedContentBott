@@ -1,3 +1,6 @@
+#Tg:MaheshChauhan/DroneBots
+#Github.com/Vasusen-code
+
 """
 Plugin for both public & private channels!
 """
@@ -30,6 +33,8 @@ ft = f"To use this bot you've to join @{fs}."
 
 batch = []
 
+# Replace the existing event handlers with these modified versions
+
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/cancel'))
 async def cancel(event):
     if not (event.is_private or event.is_channel):
@@ -43,7 +48,8 @@ async def cancel(event):
 async def _batch(event):
     if not (event.is_private or event.is_channel):
         return
-    
+    # Rest of your code.
+ 
     s, r = await force_sub(event.client, fs, event.sender_id, ft) 
     if s == True:
         await event.reply(r)
@@ -130,71 +136,12 @@ async def _batch(event):
                 batch.clear()
                 break
 
-# The rest of the code from the previous snippet...
-
-async def run_batch(userbot, client, sender, link, _range):
-    for i in range(_range):
-        timer = 60
-        if i < 25:
-            timer = 1
-        if i < 50 and i > 25:
-            timer = 2
-        if i < 100 and i > 50:
-            timer = 3
-        if not 't.me/c/' in link:
-            if i < 25:
-                timer = 2
-            else:
-                timer = 3
-        try: 
-            if not sender in batch:
-                await client.send_message(sender, "Batch completed.")
-                break
-        except Exception as e:
-            print(e)
-            await client.send_message(sender, "Batch completed.")
-            break
-        try:
-            await get_bulk_msg(userbot, client, sender, link, i) 
-        except FloodWait as fw:
-            if int(fw.x) > 299:
-                await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
-                break
-            await asyncio.sleep(fw.x + 5)
-            await get_bulk_msg(userbot, client, sender, link, i)
-        protection = await client.send_message(sender, f"Sleeping for `{timer}` seconds to avoid Floodwaits and Protect account!")
-        await asyncio.sleep(timer)
-        await protection.delete()
-
-# Error handling and cleanup after batch completion
-@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/cleanup'))
-async def cleanup(event):
-    if not (event.is_private or event.is_channel):
-        return
-    
-    # Clear the batch list
-    batch.clear()
-
-    # Delete the replaceit and replacewith files
-    try:
-        os.remove(REPLACEIT_PATH)
-    except FileNotFoundError:
-        pass
-    
-    try:
-        os.remove(REPLACEWITH_PATH)
-    except FileNotFoundError:
-        pass
-
-    await event.reply("Cleanup completed.")
-
-
-
 # Additional error handling
 @Drone.on_message(filters.chat_action)
 async def chat_action_handler(client, event):
     try:
         # Your existing code here
+        pass
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -219,3 +166,64 @@ async def cleanup(event):
         pass
 
     await event.reply("Cleanup completed.")
+# ... (existing import statements)
+
+# Define the run_batch function
+async def run_batch(userbot, client, sender, link, _range):
+    for i in range(_range):
+        timer = 60
+        if i < 25:
+            timer = 1
+        if i < 50 and i > 25:
+            timer = 2
+        if i < 100 and i > 50:
+            timer = 3
+        if not 't.me/c/' in link:
+            if i < 25:
+                timer = 2
+            else:
+                timer = 3
+        try:
+            if not sender in batch:
+                await client.send_message(sender, "Batch completed.")
+                break
+        except Exception as e:
+            print(e)
+            await client.send_message(sender, "Batch completed.")
+            break
+        try:
+            await get_bulk_msg(userbot, client, sender, link, i)
+        except FloodWait as fw:
+            if int(fw.x) > 299:
+                await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
+                break
+            await asyncio.sleep(fw.x + 5)
+            await get_bulk_msg(userbot, client, sender, link, i)
+        protection = await client.send_message(sender, f"Sleeping for `{timer}` seconds to avoid Floodwaits and Protect account!")
+        await asyncio.sleep(timer)
+        await protection.delete()
+
+# Existing event handlers and functions can remain here.
+
+# Replace the existing event handlers with these modified versions
+
+@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/cancel'))
+async def cancel(event):
+    # ... (existing /cancel event handler)
+
+@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
+async def _batch(event):
+    # ... (existing /batch event handler)
+
+# ... (existing event handlers)
+
+# ... (additional functions and event handlers)
+
+# ... (existing error handling and cleanup event handler)
+
+# ... (existing /cleanup event handler)
+
+# ... (any other existing logic or event handlers)
+
+# ... (end of file)
+                            
