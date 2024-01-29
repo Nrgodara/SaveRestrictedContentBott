@@ -161,9 +161,10 @@ async def _batch(event):
                 return
 
 # Additional error handling
-@Drone.on(events.NewMessage)
+@Drone.on_message(filters.chat_action)
 async def chat_action_handler(client, event):
-    try:
+    await progress.run(context)
+
         # Your existing code here
         pass
     except Exception as e:
