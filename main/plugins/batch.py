@@ -55,13 +55,13 @@ async def run_batch(userbot, client, sender, link, _range):
         except Exception as e:
             print(e)
             await client.send_message(sender, "Batch completed.")
-            
+            return
         try:
             await get_bulk_msg(userbot, client, sender, link, i)
         except FloodWait as fw:
             if int(fw.x) > 299:
                 await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
-                
+                return 
             await asyncio.sleep(fw.x + 5)
             await get_bulk_msg(userbot, client, sender, link, i)
         protection = await client.send_message(sender, f"Sleeping for `{timer}` seconds to avoid Floodwaits and Protect account!")
@@ -146,7 +146,7 @@ async def _batch(event):
                         await run_batch(userbot, Bot, event.sender_id, _link, _range) 
                         conv.cancel()
                         batch.clear()
-                        break
+                        return
                 else:
                     await conv.send_message("Error: No message found with the specified caption.")
                     conv.cancel()
@@ -158,7 +158,7 @@ async def _batch(event):
                 await run_batch(userbot, Bot, event.sender_id, _link, _range) 
                 conv.cancel()
                 batch.clear()
-                break
+                return
 
 # Additional error handling
 @Drone.on_message(filters.chat_action)
