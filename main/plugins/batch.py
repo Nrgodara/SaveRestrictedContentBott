@@ -109,31 +109,7 @@ async def run_batch(userbot, client, sender, link, _range):
 
 
 
-async def get_bulk_msg(userbot, client, sender, link, i):
-    try:
-        messages = await userbot.get_messages(link, reverse=True)
-        if messages:
-            message = messages[0]
-            await client.send_message(sender, message)
-        else:
-            print(f"Message not found for index {i}")
-    except errors.MessageIdInvalidError:
-        print(f"Message not found for index {i}")
-
-
-
-
-
- 
-        except FloodWait as fw:
-            if int(fw.x) > 299:
-                await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
-                break
-            await asyncio.sleep(fw.x + 5)
-            await get_bulk_msg(userbot, client, sender, link, i)
-        protection = await client.send_message(sender, f"Sleeping for `{timer}` seconds to avoid Floodwaits and Protect account!")
-        await asyncio.sleep(timer)
-        await protection.delete()
+# ... (Previous code remains unchanged)
 
 async def get_bulk_msg(userbot, client, sender, link, i):
     try:
@@ -145,6 +121,40 @@ async def get_bulk_msg(userbot, client, sender, link, i):
             print(f"Message not found for index {i}")
     except errors.MessageIdInvalidError:
         print(f"Message not found for index {i}")
+
+async def run_batch(userbot, client, sender, link, _range):
+    for i in range(_range):
+        timer = 60
+        if i < 25:
+            timer = 3
+        if 25 <= i < 50:
+            timer = 6
+        if 50 <= i < 100:
+            timer = 9
+        if not 't.me/c/' in link:
+            if i < 25:
+                timer = 2
+            else:
+                timer = 3
+        try: 
+            if not sender in batch:
+                await client.send_message(sender, "Batch completed.😱❤️‍🔥")
+                break
+        except Exception as e:
+            print(e)
+            await client.send_message(sender, "Batch completed.😱❤️‍🔥")
+            break
+        try:
+            await get_bulk_msg(userbot, client, sender, link, i)
+        except FloodWait as fw:
+            if int(fw.x) > 299:
+                await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
+                break
+            await asyncio.sleep(fw.x + 5)
+            await get_bulk_msg(userbot, client, sender, link, i)
+        protection = await client.send_message(sender, f"Sleeping for `{timer}` seconds to avoid Floodwaits and Protect account!")
+        await asyncio.sleep(timer)
+        await protection.delete()
 
 # Ensure the /batch command works in channels
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
