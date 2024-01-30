@@ -87,49 +87,9 @@ async def run_batch(userbot, client, sender, link, _range):
         timer = 60
         if i < 25:
             timer = 3
-        if i < 50 and i > 25:
+        elif 25 <= i < 50:
             timer = 6
-        if i < 100 and i > 50:
-            timer = 9
-        if not 't.me/c/' in link:
-            if i < 25:
-                timer = 2
-            else:
-                timer = 3
-        try: 
-            if not sender in batch:
-                await client.send_message(sender, "Batch completed.😱❤️‍🔥")
-                break
-        except Exception as e:
-            print(e)
-            await client.send_message(sender, "Batch completed.😱❤️‍🔥")
-            break
-        try:
-            
-
-
-
-# ... (Previous code remains unchanged)
-
-async def get_bulk_msg(userbot, client, sender, link, i):
-    try:
-        messages = await userbot.get_messages(link, limit=1, reverse=True)
-        if messages:
-            message = messages[0]
-            await client.send_message(sender, message)
-        else:
-            print(f"Message not found for index {i}")
-    except errors.MessageIdInvalidError:
-        print(f"Message not found for index {i}")
-
-async def run_batch(userbot, client, sender, link, _range):
-    for i in range(_range):
-        timer = 60
-        if i < 25:
-            timer = 3
-        if 25 <= i < 50:
-            timer = 6
-        if 50 <= i < 100:
+        elif 50 <= i < 100:
             timer = 9
         if not 't.me/c/' in link:
             if i < 25:
