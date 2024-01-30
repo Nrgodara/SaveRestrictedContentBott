@@ -1,5 +1,5 @@
-#Tg:Defence_Exams_all
-#Github.com/Nrgodara
+#Tg:MaheshChauhan/DroneBots
+#Github.com/Vasusen-code
 
 """
 Plugin for both public & private channels!
@@ -116,19 +116,19 @@ async def run_batch(userbot, client, sender, link, _range):
         await asyncio.sleep(timer)
         await protection.delete()
 
-# Remove the code related to "replaceit" and "replacewith" files
+async def get_bulk_msg(userbot, client, sender, link, i):
+    try:
+        messages = await userbot.get_messages(link, limit=1, reverse=True)
+        if messages:
+            message = messages[0]
+            await client.send_message(sender, message)
+        else:
+            print(f"Message not found for index {i}")
+    except errors.MessageIdInvalidError:
+        print(f"Message not found for index {i}")
 
 # Ensure the /batch command works in channels
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
 async def _batch_channel(event):
     if event.is_channel:
         await _batch(event)
-
-# Modify the logic to skip messages not found during batch process
-async def get_bulk_msg(userbot, client, sender, link, i):
-    try:
-        # Existing logic to get and send bulk messages
-        pass
-    except errors.MessageIdInvalidError:
-        # Skip messages not found during batch process
-        pass
