@@ -162,14 +162,7 @@ async def _batch(event):
                 batch.clear()
                 return
 
-# Additional error handling
-@Drone.message_handler(filters.chat_action)
-async def chat_action_handler(client, event):
-    try:
-        async for message in event.client.iter_messages(link, reverse=False, limit=10):
-            await process_message(message)
-    except Exception as e:
-        print(f"Error processing messages: {e}")
+
 
 
 # Error handling and cleanup after batch completion
