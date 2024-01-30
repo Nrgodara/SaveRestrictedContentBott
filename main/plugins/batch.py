@@ -107,6 +107,8 @@ async def run_batch(userbot, client, sender, link, _range):
         try:
             
 
+
+
 async def get_bulk_msg(userbot, client, sender, link, i):
     try:
         messages = await userbot.get_messages(link, reverse=True)
@@ -117,6 +119,9 @@ async def get_bulk_msg(userbot, client, sender, link, i):
             print(f"Message not found for index {i}")
     except errors.MessageIdInvalidError:
         print(f"Message not found for index {i}")
+
+
+
 
 
  
