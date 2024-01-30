@@ -33,15 +33,15 @@ async def cancel(event):
     if not (event.is_private or event.is_channel):
         return
     if not event.sender_id in batch:
-        return await event.reply("No batch active.")
+        return await event.reply("No batch active.🥳")
     batch.clear()
-    await event.reply("Done.")
+    await event.reply("Done.🤠")
 
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
 async def _batch(event):
     if not (event.is_private or event.is_channel):
         return
-    # Rest of your code.
+    
 
  
     s, r = await force_sub(event.client, fs, event.sender_id, ft) 
@@ -49,7 +49,7 @@ async def _batch(event):
         await event.reply(r)
         return       
     if event.sender_id in batch:
-        return await event.reply("à¤…à¤°à¥‡! à¤¦à¤¾à¤¦à¤¾ à¤†à¤°à¤¾à¤® à¤¸à¥‡, à¤ªà¤¹à¤²à¥‡ à¤µà¤¾à¤²à¥‡ à¤•à¥‹ Cancel âŒ à¤•à¤° à¤ªà¤¹à¤²à¥‡")
+        return await event.reply("Please /cancel the Ongoing process first💔")
     async with Drone.conversation(event.chat_id) as conv: 
         if s != True:
             await conv.send_message("Send me the message link you want to start saving from, as a reply to this message.", buttons=Button.force_reply())
@@ -62,7 +62,7 @@ async def _batch(event):
                     return conv.cancel()
             except Exception as e:
                 print(e)
-                await conv.send_message("à¤®à¥ˆà¤‚ à¤”à¤•à¤¾à¤¤ à¤¦à¤¿à¤–à¤¾ à¤¦à¥€ à¤®à¤¾à¤°à¥€ à¤ªà¤¾à¤›à¥‹ à¤­à¥‡à¤œ /batch ðŸ‘¿")
+                await conv.send_message("Time out🚫 \n command /batch again to continue...✅")
                 return conv.cancel()
             await conv.send_message("Send me the number of files/range you want to save from the given message, as a reply to this message.", buttons=Button.force_reply())
             try:
@@ -74,7 +74,7 @@ async def _batch(event):
             try:
                 value = int(_range.text)
                 if value > 1000:
-                    await conv.send_message("à¤¬à¤¸ à¤•à¤° à¤­à¤¾à¤ˆ à¤ à¤¾à¤µà¤¸ à¤°à¤¾à¤– 500 à¤­à¥‡à¤œ.")
+                    await conv.send_message("You can't get more than 1000 files in a single batch \n /start /batch again😂")
                     return conv.cancel()
             except ValueError:
                 await conv.send_message("Range must be an integer!")
@@ -88,11 +88,11 @@ async def run_batch(userbot, client, sender, link, _range):
     for i in range(_range):
         timer = 60
         if i < 25:
-            timer = 1
-        if i < 50 and i > 25:
-            timer = 2
-        if i < 100 and i > 50:
             timer = 3
+        if i < 50 and i > 25:
+            timer = 6
+        if i < 100 and i > 50:
+            timer = 9
         if not 't.me/c/' in link:
             if i < 25:
                 timer = 2
@@ -100,11 +100,11 @@ async def run_batch(userbot, client, sender, link, _range):
                 timer = 3
         try: 
             if not sender in batch:
-                await client.send_message(sender, "Batch completed.")
+                await client.send_message(sender, "Batch completed.😱❤️‍🔥")
                 break
         except Exception as e:
             print(e)
-            await client.send_message(sender, "Batch completed.")
+            await client.send_message(sender, "Batch completed.😱❤️‍🔥")
             break
         try:
             await get_bulk_msg(userbot, client, sender, link, i) 
