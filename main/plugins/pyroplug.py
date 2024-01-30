@@ -1,3 +1,4 @@
+
 #Github.com-Vasusen-code
 
 import asyncio, time, os
@@ -41,22 +42,19 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
         file = ""
         try:
             msg = await userbot.get_messages(chat, msg_id)
-            if not msg:
-                print(f"Message not found: {msg_link}")
-                return  # Skip/Ignore if the message doesn't exist
             if msg.media:
                 if msg.media==MessageMediaType.WEB_PAGE:
-                    edit = await client.edit_message_text(sender, edit_id, "Cloning.")
+                    edit = await client.edit_message_text(sender, edit_id, "Cloning❤️‍🔥")
                     await client.send_message(sender, msg.text.markdown)
                     await edit.delete()
                     return
             if not msg.media:
                 if msg.text:
-                    edit = await client.edit_message_text(sender, edit_id, "Cloning.")
+                    edit = await client.edit_message_text(sender, edit_id, "Cloning❤️‍🔥")
                     await client.send_message(sender, msg.text.markdown)
                     await edit.delete()
                     return
-            edit = await client.edit_message_text(sender, edit_id, "Trying to Download.")
+            edit = await client.edit_message_text(sender, edit_id, "Trying to Download✅")
             file = await userbot.download_media(
                 msg,
                 progress=progress_for_pyrogram,
@@ -68,7 +66,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
                 )
             )
             print(file)
-            await edit.edit('Preparing to Upload!')
+            await edit.edit('Preparing to Upload👌')
             caption = None
             if msg.caption is not None:
                 caption = msg.caption
@@ -216,5 +214,5 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
         await edit.delete()
         
 async def get_bulk_msg(userbot, client, sender, msg_link, i):
-    x = await client.send_message(sender, "Processing!")
+    x = await client.send_message(sender, "Processing⏳")
     await get_msg(userbot, client, Drone, sender, x.id, msg_link, i)
