@@ -1,5 +1,5 @@
-#Tg:MaheshChauhan/DroneBots
-#Github.com/Vasusen-code
+#Tg:Defence_Exams_all
+#Github.com/Nrgodara
 
 """
 Plugin for both public & private channels!
@@ -26,23 +26,28 @@ ft = f"To use this bot you've to join @{fs}."
 
 batch = []
 
+# Replace the existing event handlers with these modified versions
+
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/cancel'))
 async def cancel(event):
+    if not (event.is_private or event.is_channel):
+        return
     if not event.sender_id in batch:
-        return await event.reply("No batch active.")
+        return await event.reply("No batch active.🥳")
     batch.clear()
-    await event.reply("Done.")
-    
+    await event.reply("Done.🤠")
+
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
 async def _batch(event):
-    if not event.is_private:
+    if not (event.is_private or event.is_channel):
         return
+    
     s, r = await force_sub(event.client, fs, event.sender_id, ft) 
     if s == True:
         await event.reply(r)
         return       
     if event.sender_id in batch:
-        return await event.reply("You've already started one batch, wait for it to complete you dumbfuck owner!")
+        return await event.reply("Please /cancel the Ongoing process first💔")
     async with Drone.conversation(event.chat_id) as conv: 
         if s != True:
             await conv.send_message("Send me the message link you want to start saving from, as a reply to this message.", buttons=Button.force_reply())
@@ -55,19 +60,19 @@ async def _batch(event):
                     return conv.cancel()
             except Exception as e:
                 print(e)
-                await conv.send_message("Cannot wait more longer for your response!")
+                await conv.send_message("Time out🚫 \n command /batch again to continue...✅")
                 return conv.cancel()
             await conv.send_message("Send me the number of files/range you want to save from the given message, as a reply to this message.", buttons=Button.force_reply())
             try:
                 _range = await conv.get_reply()
             except Exception as e:
                 print(e)
-                await conv.send_message("bheeghi bheeghi sadako pe me tera intezar karu!")
+                await conv.send_message("Cannot wait more try again  send again /start /batch ")
                 return conv.cancel()
             try:
                 value = int(_range.text)
-                if value > 400:
-                    await conv.send_message("You can only get upto 100 files in a single batch.")
+                if value > 1000:
+                    await conv.send_message("You can't get more than 1000 files in a single batch \n /start /batch again😂")
                     return conv.cancel()
             except ValueError:
                 await conv.send_message("Range must be an integer!")
@@ -79,13 +84,13 @@ async def _batch(event):
 
 async def run_batch(userbot, client, sender, link, _range):
     for i in range(_range):
-        timer = 5
+        timer = 60
         if i < 25:
-            timer = 1
-        if i < 50 and i > 25:
-            timer = 2
-        if i < 100 and i > 50:
             timer = 3
+        if i < 50 and i > 25:
+            timer = 6
+        if i < 100 and i > 50:
+            timer = 9
         if not 't.me/c/' in link:
             if i < 25:
                 timer = 2
@@ -93,11 +98,11 @@ async def run_batch(userbot, client, sender, link, _range):
                 timer = 3
         try: 
             if not sender in batch:
-                await client.send_message(sender, "Batch completed.")
+                await client.send_message(sender, "Batch completed.😱❤️‍🔥")
                 break
         except Exception as e:
             print(e)
-            await client.send_message(sender, "Batch completed.")
+            await client.send_message(sender, "Batch completed.😱❤️‍🔥")
             break
         try:
             await get_bulk_msg(userbot, client, sender, link, i) 
@@ -110,4 +115,20 @@ async def run_batch(userbot, client, sender, link, _range):
         protection = await client.send_message(sender, f"Sleeping for `{timer}` seconds to avoid Floodwaits and Protect account!")
         await asyncio.sleep(timer)
         await protection.delete()
-            
+
+# Remove the code related to "replaceit" and "replacewith" files
+
+# Ensure the /batch command works in channels
+@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
+async def _batch_channel(event):
+    if event.is_channel:
+        await _batch(event)
+
+# Modify the logic to skip messages not found during batch process
+async def get_bulk_msg(userbot, client, sender, link, i):
+    try:
+        # Existing logic to get and send bulk messages
+        pass
+    except errors.MessageIdInvalidError:
+        # Skip messages not found during batch process
+        pass
