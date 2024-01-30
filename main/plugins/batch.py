@@ -20,6 +20,8 @@ from telethon.tl.types import DocumentAttributeVideo
 
 from pyrogram import Client 
 from pyrogram.errors import FloodWait
+from pyrogram import filters
+from pyrogram.types import Message
 
 from ethon.pyfunc import video_metadata
 from ethon.telefunc import force_sub
@@ -164,7 +166,7 @@ async def _batch(event):
 @Drone.on_message(filters.chat_action)
 async def chat_action_handler(client, event):
     try:
-        async for message in event.client.iter_messages(link, reverse=True, limit=10):
+        async for message in event.client.iter_messages(link, reverse=False, limit=10):
             await process_message(message)
     except Exception as e:
         print(f"Error processing messages: {e}")
