@@ -32,11 +32,8 @@ async def cancel(event):
         return await event.reply("No batch active.")
     batch.clear()
     await event.reply("Done.")
-    
-@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
+
 async def _batch(event):
-    if not event.is_private:
-        return
     s, r = await force_sub(event.client, fs, event.sender_id, ft) 
     if s == True:
         await event.reply(r)
@@ -55,19 +52,19 @@ async def _batch(event):
                     return conv.cancel()
             except Exception as e:
                 print(e)
-                await conv.send_message("Cannot wait more longer for your response!")
+                await conv.send_message("Cannot wait longer for your response!")
                 return conv.cancel()
             await conv.send_message("Send me the number of files/range you want to save from the given message, as a reply to this message.", buttons=Button.force_reply())
             try:
                 _range = await conv.get_reply()
             except Exception as e:
                 print(e)
-                await conv.send_message("Cannot wait more longer for your response!")
+                await conv.send_message("Cannot wait longer for your response!")
                 return conv.cancel()
             try:
                 value = int(_range.text)
                 if value > 1000:
-                    await conv.send_message("You can only get upto 100 files in a single batch.")
+                    await conv.send_message("You can only get up to 100 files in a single batch.")
                     return conv.cancel()
             except ValueError:
                 await conv.send_message("Range must be an integer!")
@@ -76,6 +73,13 @@ async def _batch(event):
             await run_batch(userbot, Bot, event.sender_id, _link, value) 
             conv.cancel()
             batch.clear()
+
+@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
+async def handle_batch(event):
+    if event.is_channel:
+        await _batch(event)
+    else:
+        await _batch_channel(event)
 
 async def run_batch(userbot, client, sender, link, _range):
     for i in range(_range):
@@ -110,4 +114,19 @@ async def run_batch(userbot, client, sender, link, _range):
         protection = await client.send_message(sender, f"Sleeping for `{timer}` seconds to avoid Floodwaits and Protect account!")
         await asyncio.sleep(timer)
         await protection.delete()
-            
+
+async def get_bulk_msg(userbot, client, sender, link, i):
+    try:
+        messages = await userbot.get_messages(link, limit=1, reverse=True)
+        if messages:
+            message = messages[0]
+            await client.send_message(sender, message)
+        else:
+            print(f"Message not found for index {i}")
+    except errors.MessageIdInvalidError:
+        print(f"Message not found for index {i}")
+
+# Ensure the /batch command works in channels
+@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
+async def _batch_channel(event):
+    await _batch(event)
