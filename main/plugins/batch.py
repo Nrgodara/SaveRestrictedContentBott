@@ -105,7 +105,21 @@ async def run_batch(userbot, client, sender, link, _range):
             await client.send_message(sender, "Batch completed.😱❤️‍🔥")
             break
         try:
-            await get_bulk_msg(userbot, client, sender, link, i) 
+            
+
+async def get_bulk_msg(userbot, client, sender, link, i):
+    try:
+        messages = await userbot.get_messages(link, reverse=True)
+        if messages:
+            message = messages[0]
+            await client.send_message(sender, message)
+        else:
+            print(f"Message not found for index {i}")
+    except errors.MessageIdInvalidError:
+        print(f"Message not found for index {i}")
+
+
+ 
         except FloodWait as fw:
             if int(fw.x) > 299:
                 await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
