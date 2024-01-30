@@ -33,9 +33,9 @@ async def cancel(event):
     if not (event.is_private or event.is_channel):
         return
     if not event.sender_id in batch:
-        return await event.reply("No batch active.🥳")
+        return await event.reply("No batch active🥳")
     batch.clear()
-    await event.reply("Done.🤠")
+    await event.reply("Done🤠")
 
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
 async def _batch(event):
@@ -60,7 +60,7 @@ async def _batch(event):
                     return conv.cancel()
             except Exception as e:
                 print(e)
-                await conv.send_message("Time out🚫 \n command /batch again to continue...✅")
+                await conv.send_message("Time out🚫 \n command /batch again to continue✅")
                 return conv.cancel()
             await conv.send_message("Send me the number of files/range you want to save from the given message, as a reply to this message.", buttons=Button.force_reply())
             try:
@@ -87,25 +87,27 @@ async def run_batch(userbot, client, sender, link, _range):
         timer = 60
         if i < 25:
             timer = 3
-        elif 25 <= i < 50:
+        if i < 50 and i > 25:
             timer = 6
-        elif 50 <= i < 100:
+        if i < 100 and i > 50:
             timer = 9
         if not 't.me/c/' in link:
             if i < 25:
                 timer = 2
             else:
-                timer = 3
+                timer = 1
         try: 
             if not sender in batch:
-                await client.send_message(sender, "Batch completed.😱❤️‍🔥")
+                await client.send_message(sender, "Batch completed")
                 break
         except Exception as e:
             print(e)
-            await client.send_message(sender, "Batch completed.😱❤️‍🔥")
+            await client.send_message(sender, "Batch completed🫣💔")
             break
         try:
-            await get_bulk_msg(userbot, client, sender, link, i)
+            await get_bulk_msg(userbot, client, sender, link, i) 
+        except errors.MessageIdInvalidError:
+            print(f"Message not found for index {i}")
         except FloodWait as fw:
             if int(fw.x) > 299:
                 await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
@@ -121,3 +123,14 @@ async def run_batch(userbot, client, sender, link, _range):
 async def _batch_channel(event):
     if event.is_channel:
         await _batch(event)
+
+async def get_bulk_msg(userbot, client, sender, link, i):
+    try:
+        messages = await userbot.get_messages(link, limit=1, reverse=True)
+        if messages:
+            message = messages[0]
+            await client.send_message(sender, message)
+        else:
+            print(f"Message not found for index {i}")
+    except errors.MessageIdInvalidError:
+        print(f"Message not found for index {i}")
