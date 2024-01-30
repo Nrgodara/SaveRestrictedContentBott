@@ -1,4 +1,4 @@
-It's batch.py in main/plugins
+
 
 #Tg:MaheshChauhan/DroneBots
 #Github.com/Vasusen-code
