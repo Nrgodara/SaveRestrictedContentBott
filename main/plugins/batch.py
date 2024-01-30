@@ -92,7 +92,7 @@ async def _batch(event):
         await event.reply(r)
         return       
     if event.sender_id in batch:
-        return await event.reply("à¤…à¤°à¥‡! à¤¦à¤¾à¤¦à¤¾ à¤†à¤°à¤¾à¤® à¤¸à¥‡, à¤ªà¤¹à¤²à¥‡ à¤µà¤¾à¤²à¥‡ à¤•à¥‹ Cancel âŒ à¤•à¤° à¤ªà¤¹à¤²à¥‡")
+        return await event.reply("Hi, first /cancel ongoing batch process to start the new one")
     async with Drone.conversation(event.chat_id) as conv: 
         if not s:
             await conv.send_message("Send me the message link you want to start saving from, as a reply to this message.", buttons=Button.force_reply())
@@ -162,7 +162,16 @@ async def _batch(event):
                 batch.clear()
                 return
 
-
+@Drone.message_handler(filters.chat_action)
+async def chat_action_handler(client, event):
+    try:
+        async for message in event.client.iter_messages(link, reverse=False, limit=10):
+            await process_message(message)
+    except ValueError as ve:
+        print(f"Error finding entity: {ve}")
+    except Exception as e:
+        print(f"Error processing messages: {e}")
+        
 
 
 # Error handling and cleanup after batch completion
