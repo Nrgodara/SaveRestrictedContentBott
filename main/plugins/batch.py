@@ -113,10 +113,7 @@ async def run_batch(userbot, client, sender, link, _range):
                             with open("downloads/replacewith.txt", "r") as replace_file:
                         replace_with_text = replace_file.read()
 
-                    # Edit the caption of the new sent message
-                    await client.edit_message_caption(sender, new_message.id,
-                                                      caption=new_message.caption.replace(replace_from_text,
-                                                                                            replace_with_text))
+                    
                 except FloodWait as fw:
                     if int(fw.x) > 299:
                         await client.send_message(sender,
@@ -129,14 +126,7 @@ async def run_batch(userbot, client, sender, link, _range):
                 await asyncio.sleep(timer)
                 await protection.delete()
 
-            # Delete the data saved in downloads
-            os.remove("downloads/replaceit.txt")
-            os.remove("downloads/replacewith.txt")
-
-        elif response.text.lower() in ['no', 'n']:
-            await conv.send_message("Continuing the batch process without replacing captions.")
-        else:
-            await conv.send_message("Invalid response. Continuing the batch process without replacing captions.")
+            
 
     except Exception as e:
         print(e)
