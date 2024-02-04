@@ -46,7 +46,7 @@ async def remt(event):
 async def start(event):
     user_mention = f"[{event.sender_id}](tg://user?id={event.sender_id})"
     text = (
-        f"Hey, [{user.first_name} {user.last_name}]! ❤️‍🔥🌟\n"
+        f"Hey, {user_mention} ({event.sender.first_name} {event.sender.last_name})! ❤️‍🔥🌟\n"
         "Ready to work some magic? ✨ Send me the link of any message, and I'll clone it right here. "
         "For private channel messages, don't forget to send the invite link first. 😉\n\n"
         "**MAHI®**"
