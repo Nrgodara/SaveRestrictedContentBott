@@ -37,9 +37,8 @@ async def cancel(event):
     batch.clear()
     await event.reply("Done.")
 
-@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
+@Drone.on(events.NewMessage(incoming=True, pattern='/batch'))
 async def _batch(event):
-    # Remove the check for private chats or channels
     s, r = await force_sub(event.client, fs, event.sender_id, ft) 
     if s == True:
         await event.reply(r)
