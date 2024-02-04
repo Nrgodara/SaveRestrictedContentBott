@@ -28,7 +28,7 @@ from ethon.pyfunc import video_metadata
 # Continue the batch command
 batch = []
 
-@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/cancel'))
+@Drone.on(events.NewMessage(incoming=True, pattern='/cancel'))
 async def cancel(event):
     if not (event.is_private or event.is_channel):
         return
