@@ -15,7 +15,7 @@ ft = "To use this bot, simply send me the message link you want to start saving 
 
 message = "Send me the message link you want to start saving from, as a reply to this message."
 
-@Drone.on(events.NewMessage(incoming=True, func=lambda e: e.is_private or e.is_channel))
+@Drone.on(events.NewMessage(incoming=True))
 async def clone(event):
     if event.is_reply:
         reply = await event.get_reply_message()
