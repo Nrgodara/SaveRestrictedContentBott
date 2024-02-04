@@ -5,116 +5,178 @@
 Plugin for both public & private channels!
 """
 
-import time
-import os
-import asyncio
+import asyncio, time, os
 
 from .. import bot as Drone
-from .. import userbot, Bot, AUTH
-from main.plugins.helpers import get_link, screenshot
+from main.plugins.progress import progress_for_pyrogram
+from main.plugins.helpers import screenshot
 
-from telethon import events, Button, errors
-from telethon.tl.types import DocumentAttributeVideo
-
-from pyrogram import Client
-from pyrogram.errors import FloodWait
-
+from pyrogram import Client, filters
+from pyrogram.errors import ChannelBanned, ChannelInvalid, ChannelPrivate, ChatIdInvalid, ChatInvalid, PeerIdInvalid
+from pyrogram.enums import MessageMediaType
 from ethon.pyfunc import video_metadata
+from ethon.telefunc import fast_upload
+from telethon.tl.types import DocumentAttributeVideo
+from telethon import events
 
-ft = f"To use this bot you've to join @{fs}."
+fs = "your_channel_username"  # Replace with your actual channel username
 
-batch = []
-
-
-@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/cancel'))
-async def cancel(event):
-    if not event.sender_id in batch:
-        return await event.reply("No batch active.")
-    batch.clear()
-    await event.reply("Done.")
-
-
-@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
-async def _batch(event):
-    if not event.is_private:
-        return
-    # Removing forcesub-related logic
-    # s, r = await force_sub(event.client, fs, event.sender_id, ft)
-    # if s == True:
-    #     await event.reply(r)
-    #     return
-    if event.sender_id in batch:
-        return await event.reply("You've already started one batch, wait for it to complete ✨")
-    async with Drone.conversation(event.chat_id) as conv:
-        # Removing forcesub-related code
-        # if s != True:
-        await conv.send_message("Send me the message link you want to start saving from, as a reply to this message.",
-                                buttons=Button.force_reply())
+def thumbnail(sender):
+    if os.path.exists(f'{sender}.jpg'):
+        return f'{sender}.jpg'
+    else:
+         return None
+      
+async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
+    """ userbot: PyrogramUserBot
+    client: PyrogramBotClient
+    bot: TelethonBotClient """
+    
+    edit = ""
+    chat = ""
+    round_message = False
+    if "?single" in msg_link:
+        msg_link = msg_link.split("?single")[0]
+    msg_id = int(msg_link.split("/")[-1]) + int(i)
+    height, width, duration, thumb_path = 90, 90, 0, None
+    if 't.me/c/' or 't.me/b/' in msg_link:
+        if 't.me/b/' in msg_link:
+            chat = str(msg_link.split("/")[-2])
+        else:
+            chat = int('-100' + str(msg_link.split("/")[-2]))
+        file = ""
         try:
-            link = await conv.get_reply()
-            try:
-                _link = get_link(link.text)
-            except Exception:
-                await conv.send_message("No link found.")
-                return conv.cancel()
-        except Exception as e:
-            print(e)
-            await conv.send_message("Cannot wait more longer for your response!")
-            return conv.cancel()
-        await conv.send_message(
-            "Send me the number of files/range you want to save from the given message, as a reply to this message.",
-            buttons=Button.force_reply())
-        try:
-            _range = await conv.get_reply()
-        except Exception as e:
-            print(e)
-            await conv.send_message("Cannot wait more longer for your response!")
-            return conv.cancel()
-        try:
-            value = int(_range.text)
-            if value > 1000:
-                await conv.send_message("You can only get up to 100 files in a single batch.")
-                return conv.cancel()
-        except ValueError:
-            await conv.send_message("Range must be an integer!")
-            return conv.cancel()
-        batch.append(event.sender_id)
-        await run_batch(userbot, Bot, event.sender_id, _link, value)
-        conv.cancel()
-        batch.clear()
-
-
-async def run_batch(userbot, client, sender, link, _range):
-    for i in range(_range):
-        timer = 60
-        if i < 25:
-            timer = 2
-        if 25 <= i < 100:
-            timer = 3
-        if 100 <= i < 1000:
-            timer = 5
-        if 't.me/c/' not in link:
-            if i < 25:
-                timer = 2
+            msg = await userbot.get_messages(chat, msg_id)
+            if msg.media:
+                if msg.media==MessageMediaType.WEB_PAGE:
+                    edit = await client.edit_message_text(sender, edit_id, "Cloning❤️‍🔥")
+                    await client.send_message(sender, msg.text.markdown)
+                    await edit.delete()
+                    return
+            if not msg.media:
+                if msg.text:
+                    edit = await client.edit_message_text(sender, edit_id, "Cloning❤️‍🔥")
+                    await client.send_message(sender, msg.text.markdown)
+                    await edit.delete()
+                    return
+            edit = await client.edit_message_text(sender, edit_id, "Trying to Download✅")
+            file = await userbot.download_media(
+                msg,
+                progress=progress_for_pyrogram,
+                progress_args=(
+                    client,
+                    "**DOWNLOADING:**\n",
+                    edit,
+                    time.time()
+                )
+            )
+            print(file)
+            await edit.edit('Preparing to Upload👌')
+            caption = None
+            if msg.caption is not None:
+                caption = msg.caption
+            if msg.media==MessageMediaType.VIDEO_NOTE:
+                round_message = True
+                print("Trying to get metadata")
+                data = video_metadata(file)
+                height, width, duration = data["height"], data["width"], data["duration"]
+                print(f'd: {duration}, w: {width}, h:{height}')
+                try:
+                    thumb_path = await screenshot(file, duration, sender)
+                except Exception:
+                    thumb_path = None
+                await client.send_video_note(
+                    chat_id=sender,
+                    video_note=file,
+                    length=height, duration=duration, 
+                    thumb=thumb_path,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        client,
+                        '**UPLOADING:**\n',
+                        edit,
+                        time.time()
+                    )
+                )
+            elif msg.media==MessageMediaType.VIDEO and msg.video.mime_type in ["video/mp4", "video/x-matroska"]:
+                print("Trying to get metadata")
+                data = video_metadata(file)
+                height, width, duration = data["height"], data["width"], data["duration"]
+                print(f'd: {duration}, w: {width}, h:{height}')
+                try:
+                    thumb_path = await screenshot(file, duration, sender)
+                except Exception:
+                    thumb_path = None
+                await client.send_video(
+                    chat_id=sender,
+                    video=file,
+                    caption=caption,
+                    supports_streaming=True,
+                    height=height, width=width, duration=duration, 
+                    thumb=thumb_path,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        client,
+                        '**UPLOADING:**\n',
+                        edit,
+                        time.time()
+                    )
+                )
+            
+            elif msg.media==MessageMediaType.PHOTO:
+                await edit.edit("Uploading photo.")
+                await bot.send_file(sender, file, caption=caption)
             else:
-                timer = 3
-        try:
-            if sender not in batch:
-                await client.send_message(sender, "Batch completed.")
-                break
-        except Exception as e:
-            print(e)
-            await client.send_message(sender, "Batch completed.")
-            break
-        try:
-            await get_bulk_msg(userbot, client, sender, link, i)
-        except FloodWait as fw:
-            if int(fw.x) > 299:
-                await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
-                break
-            await asyncio.sleep(fw.x + 5)
-            await get_bulk_msg(userbot, client, sender, link, i)
-        protection = await client.send_message(sender,
-                                               f"Sleeping 😴 for `{timer}` seconds to avoid Floodwaits and Protect account!")
-        await asyncio.sleep(timer)
-        await protection.delete()
+                thumb_path=thumbnail(sender)
+                await client.send_document(
+                    sender,
+                    file, 
+                    caption=caption,
+                    thumb=thumb_path,
+                    progress=progress_for_pyrogram,
+                    progress_args=(
+                        client,
+                        '**UPLOADING:**\n',
+                        edit,
+                        time.time()
+                    )
+                )
+            try:
+                os.remove(file)
+                if os.path.isfile(file) == True:
+                    os.remove(file)
+            except Exception:
+                pass
+            await edit.delete()
+        except (ChannelBanned, ChannelInvalid, ChannelPrivate, ChatIdInvalid, ChatInvalid, PeerIdInvalid) as e:
+            await edit.edit(f"Error: {str(e)}")
+            await edit.edit("Stopped")
+            return
+    if round_message is False:
+        if thumb_path:
+            await client.send_chat_action(sender, "typing")
+            file=thumbnail(sender)
+            if file!=None:
+                await bot.send_file(sender, file)
+                os.remove(file)
+
+async def get_bulk_msg(userbot, client, sender, link, i):
+    """ userbot: PyrogramUserBot
+    client: PyrogramBotClient
+    bot: TelethonBotClient """
+    
+    if 't.me/b/' in link:
+        chat = str(link.split("/")[-2])
+        await client.send_message(sender, f"Trying to Clone batch from {chat}...")
+    else:
+        chat = int('-100' + str(link.split("/")[-2]))
+        await client.send_message(sender, f"Trying to Clone batch from {chat}...")
+    try:
+        msg_link = str(link.split("/")[-1])
+    except Exception:
+        msg_link = str(link.split("/")[-1] + "/?single")
+    try:
+        await asyncio.gather(get_msg(userbot, client, Drone, sender, 0, msg_link, i))
+    except Exception as e:
+        await client.send_message(sender, f"Error: {str(e)}")
+        return
