@@ -21,6 +21,13 @@ async def clone(event):
         reply = await event.get_reply_message()
         if reply and reply.text == message:
             return
+    elif event.text.startswith("/start"):
+        # Handle start command logic here
+        pass
+    elif event.text.startswith("/batch"):
+        # Handle batch command logic here
+        pass
+
     try:
         link = get_link(event.text)
         if not link:
