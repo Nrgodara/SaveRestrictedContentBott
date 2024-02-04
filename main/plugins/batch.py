@@ -9,6 +9,7 @@ import time, os, asyncio
 
 from .. import bot as Drone
 from .. import userbot, Bot, AUTH
+# Commented out the import for FORCESUB
 # from .. import FORCESUB as fs
 from main.plugins.pyroplug import get_bulk_msg
 from main.plugins.helpers import get_link, screenshot
@@ -20,13 +21,10 @@ from pyrogram import Client
 from pyrogram.errors import FloodWait
 
 from ethon.pyfunc import video_metadata
-from ethon.telefunc import force_sub
 
-ft = f"To use this bot you've to join @{fs}."
-# async def force_sub(client, fs, user_id, ft):
-    # Check if the user is a channel
-    # if isinstance(user_id, int) or ('t.me/c/' in str(user_id) or 't.me/b/' in str(user_id)):
-        # return True, None  # Skip force subscribe check for channels
+# Commented out the line using fs
+# ft = f"To use this bot you've to join @{fs}."
+
 # Continue the batch command
 batch = []
 
@@ -41,14 +39,14 @@ async def cancel(event):
 
 @Drone.on(events.NewMessage(incoming=True, pattern='/batch'))
 async def _batch(event):
-    s, r = await force_sub(event.client, fs, event.sender_id, ft) 
-    # if s == True:
-    await event.reply(r)
-    return       
+    # Commented out the lines related to fs
+    # s, r = await force_sub(event.client, fs, event.sender_id, ft)
+    # await event.reply(r)
+    # return
+
     if event.sender_id in batch:
         return await event.reply("You've already started one batch, wait for it to complete ✨")
-    async with Drone.conversation(event.chat_id) as conv: 
-        # if s != True:
+    async with Drone.conversation(event.chat_id) as conv:
         await conv.send_message("Send me the message link you want to start saving from, as a reply to this message.", buttons=Button.force_reply())
         try:
             link = await conv.get_reply()
@@ -77,7 +75,7 @@ async def _batch(event):
             await conv.send_message("Range must be an integer!")
             return conv.cancel()
         batch.append(event.sender_id)
-        await run_batch(userbot, Bot, event.sender_id, _link, value) 
+        await run_batch(userbot, Bot, event.sender_id, _link, value)
         conv.cancel()
         batch.clear()
 
@@ -95,7 +93,7 @@ async def run_batch(userbot, client, sender, link, _range):
                 timer = 2
             else:
                 timer = 3
-        try: 
+        try:
             if not sender in batch:
                 await client.send_message(sender, "Batch completed.")
                 break
@@ -104,7 +102,7 @@ async def run_batch(userbot, client, sender, link, _range):
             await client.send_message(sender, "Batch completed.")
             break
         try:
-            await get_bulk_msg(userbot, client, sender, link, i) 
+            await get_bulk_msg(userbot, client, sender, link, i)
         except FloodWait as fw:
             if int(fw.x) > 299:
                 await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
