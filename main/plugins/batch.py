@@ -25,7 +25,10 @@ from ethon.pyfunc import video_metadata
 from ethon.telefunc import force_sub
 
 ft = f"To use this bot you've to join @{fs}."
-
+async def force_sub(client, fs, user_id, ft):
+    # Check if the user is a channel
+    if 't.me/c/' in user_id or 't.me/b/' in user_id:
+        return True, f"Skipped subscription check for channel: {user_id}"
 batch = []
 
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/cancel'))
