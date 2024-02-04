@@ -102,13 +102,13 @@ async def run_batch(userbot, client, sender, link, _range):
             await client.send_message(sender, "Batch completed.")
             break
         try:
-    await get_bulk_msg(userbot, client, sender, link, i)
-except FloodWait as fw:
-    if fw.seconds > 299:  # Corrected line to check if the flood wait duration is greater than 299 seconds
-        await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
-        break
-    await asyncio.sleep(fw.seconds + 5)
-    await get_bulk_msg(userbot, client, sender, link, i)
+            await get_bulk_msg(userbot, client, sender, link, i)
+        except FloodWait as fw:
+            if fw.seconds > 299:  # Corrected line to check if the flood wait duration is greater than 299 seconds
+                await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
+                break
+            await asyncio.sleep(fw.seconds + 5)
+            await get_bulk_msg(userbot, client, sender, link, i)
 
         protection = await client.send_message(sender, f"Sleeping 😴 for `{timer}` seconds to avoid Floodwaits and Protect account!")
         await asyncio.sleep(timer)
