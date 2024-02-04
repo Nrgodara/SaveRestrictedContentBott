@@ -27,8 +27,8 @@ from ethon.telefunc import force_sub
 ft = f"To use this bot you've to join @{fs}."
 async def force_sub(client, fs, user_id, ft):
     # Check if the user is a channel
-    if 't.me/c/' in user_id or 't.me/b/' in user_id:
-        return True, # Skip force subscribe check for channels
+    if isinstance(user_id, int) or ('t.me/c/' in str(user_id) or 't.me/b/' in str(user_id)):
+        return True, None  # Skip force subscribe check for channels
 # Continue the batch command
 batch = []
 
