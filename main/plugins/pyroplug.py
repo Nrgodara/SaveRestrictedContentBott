@@ -11,7 +11,6 @@ import asyncio
 
 from .. import bot as Drone
 from .. import userbot, Bot, AUTH
-from main.plugins.pyroplug import get_bulk_msg
 from main.plugins.helpers import get_link, screenshot
 
 from telethon import events, Button, errors
