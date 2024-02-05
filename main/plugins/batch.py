@@ -35,7 +35,7 @@ async def cancel(event):
     batch.clear()
     await event.reply("Done.")
     
-@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
+@Drone.on(events.NewMessage(incoming=True, pattern='/batch'))
 async def _batch(event):
     #if not event.is_private:
         #return
