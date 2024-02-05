@@ -83,33 +83,33 @@ async def run_batch(userbot, client, sender, link, _range):
     for i in range(_range):
         timer = 60
         if i < 25:
-            timer = 2
-        if i < 100 and i > 25:
-            timer = 3
-        if i < 1000 and i > 100:
             timer = 5
+        if i < 50 and i > 25:
+            timer = 10
+        if i < 100 and i > 50:
+            timer = 15
         if not 't.me/c/' in link:
             if i < 25:
                 timer = 2
             else:
                 timer = 3
-        try:
+        try: 
             if not sender in batch:
                 await client.send_message(sender, "Batch completed.")
                 break
         except Exception as e:
             print(e)
-            await client.send_message(sender, "Batch completed.")
+            await client.send_message(sender, "Upload Complete ✅👍")
             break
         try:
-            await get_bulk_msg(userbot, client, sender, link, i)
+            await get_bulk_msg(userbot, client, sender, link, i) 
         except FloodWait as fw:
-            if fw.seconds > 299:  # Corrected line to check if the flood wait duration is greater than 299 seconds
-                await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes.")
+            if int(fw.x) > 299:
+                await client.send_message(sender, "Cancelling batch since you have floodwait more than 5 minutes🚫.")
                 break
-            await asyncio.sleep(fw.seconds + 5)
+            await asyncio.sleep(fw.x + 5)
             await get_bulk_msg(userbot, client, sender, link, i)
 
-        protection = await client.send_message(sender, f"Sleeping 😴 for `{timer}` seconds to avoid Floodwaits and Protect account!")
+        protection = await client.send_message(sender, f"Sleeping 🥱 for `{timer}` seconds to avoid Floodwaits👌 and Protect account!")
         await asyncio.sleep(timer)
         await protection.delete()
