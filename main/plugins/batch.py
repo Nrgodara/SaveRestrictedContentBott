@@ -11,7 +11,7 @@ import time, os, asyncio
 
 from .. import bot as Drone
 from .. import userbot, Bot, AUTH
-from .. import FORCESUB as fs
+#from .. import FORCESUB as fs
 from main.plugins.pyroplug import get_bulk_msg
 from main.plugins.helpers import get_link, screenshot
 
@@ -22,13 +22,13 @@ from pyrogram import Client
 from pyrogram.errors import FloodWait
 
 from ethon.pyfunc import video_metadata
-from ethon.telefunc import force_sub
+#from ethon.telefunc import force_sub
 
-ft = f"To use this bot you've to join @{fs}."
+#ft = f"To use this bot you've to join @{fs}."
 
 batch = []
 
-@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/cancel'))
+@Drone.on(events.NewMessage(incoming=True, pattern='/cancel'))
 async def cancel(event):
     if not event.sender_id in batch:
         return await event.reply("No batch active.")
@@ -37,16 +37,16 @@ async def cancel(event):
     
 @Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
 async def _batch(event):
-    if not event.is_private:
-        return
-    s, r = await force_sub(event.client, fs, event.sender_id, ft) 
-    if s == True:
-        await event.reply(r)
-        return       
+    #if not event.is_private:
+        #return
+    #s, r = await force_sub(event.client, fs, event.sender_id, ft) 
+    #if s == True:
+        #await event.reply(r)
+        #return       
     if event.sender_id in batch:
         return await event.reply("You've already started one batch, wait for it to complete ✨")
     async with Drone.conversation(event.chat_id) as conv: 
-        if s != True:
+        #if s != True:
             await conv.send_message("Send me the message link you want to start saving from, as a reply to this message.", buttons=Button.force_reply())
             try:
                 link = await conv.get_reply()
