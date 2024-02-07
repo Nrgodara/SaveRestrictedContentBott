@@ -17,15 +17,14 @@ async def progress_for_pyrogram(
 ):
     now = time.time()
     diff = now - start
-    progress = ""  # Define progress here
     if round(diff % 10.00) == 0 or current == total:
         percentage = current * 100 / total
         status = DOWNLOAD_LOCATION + "/status.json"
         if os.path.exists(status):
             with open(status, 'r+') as f:
                 statusMsg = json.load(f)
-                if not statusMsg.get("running", True):
-                    await bot.stop_transmission()
+                if not statusMsg["running"]:
+                    bot.stop_transmission()
         speed = current / diff
         elapsed_time = round(diff) * 1000
         time_to_completion = round((total - current) / speed) * 1000
@@ -44,14 +43,14 @@ async def progress_for_pyrogram(
         progress_bar += f"] | {round(percentage, 2)}%"
 
         # Enhanced visual appearance
-        progress = f"""╔════❰ 📤 𝔽𝕀𝕃𝔼 𝕊𝕐ℕℂ 📤❱═❍⊱❁۪۪
+        progress_str = f"""╔════❰ 📤 𝔽𝕀𝕃𝔼 𝕊𝕐ℕℂ 📤❱═❍⊱❁۪۪
 ║╭━━━━━━━━━━━━━━━━━━━━➣
-║┣༻**𝑬𝒙𝒑𝒆𝒄𝒕 𝑻𝒉𝒆 𝑼𝒏𝒆𝒙𝒑𝒆𝒄𝒕𝒆𝒅🫰❤️‍🔥**༺
+║┣༻°•**𝑬𝒙𝒑𝒆𝒄𝒕 𝑻𝒉𝒆 𝑼𝒏𝒆𝒙𝒑𝒆𝒄𝒕𝒆𝒅🫰❤️‍🔥**•°༺
 ║┃┗━━━━•❃°•🅜🅐🅗🅘•°❃•━━━━┛
 ║┃
 {progress_bar}
 ║┃
-║┣⪼𖨠📁 𝙂𝒓𝙤𝒔𝙨: {humanbytes(current)} 𝒐𝒇 {humanbytes(total)}
+║┣⪼𖨠📁 𝙂𝒓𝙤𝒔𝙨: {humanbytes(current)} 𝒐𝒇 {humanbytes(total)} 𝑴𝑩
 ║┃
 ║┣⪼𖨠🚀➤ 𝙎𝒑𝙚𝒆𝙙: {humanbytes(speed)}/s
 ║┃
@@ -59,23 +58,29 @@ async def progress_for_pyrogram(
 ║╰━━━━━━━━━━━━━━━━━━━➣ 
 ╚═════❰ 𝙇𝑶𝘼𝑫𝙄𝑵𝙂⚡❱════❍⊱❁"""
 
-    try:
-        if hasattr(message, 'photo') and not message.photo:
-            await message.edit_text(
-                text="{}\n{}".format(
-                    ud_type,
-                    progress
-                )
-            )
-        else:
-            await message.edit_caption(
-                caption="{}\n{}".format(
-                    ud_type,
-                    progress
-                )
-            )
-    except Exception as e:
-        print(f"Error while updating progress: {e}")
+        # Check if the progress message has changed
+        if progress_str != message.text:
+            try:
+                if not message.photo:
+                    await message.edit_text(
+                        text="{}\n{}".format(
+                            ud_type,
+                            progress_str
+                        )
+                    )
+                else:
+                    await message.edit_caption(
+                        caption="{}\n{}".format(
+                            ud_type,
+                            progress_str
+                        )
+                    )
+            except:
+                pass
+
+            except Exception as e:
+                print(f"Error while updating progress: {e}")
+
 
 
 
