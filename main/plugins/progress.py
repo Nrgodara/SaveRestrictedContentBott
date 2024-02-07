@@ -3,10 +3,9 @@ import os
 import time
 import json
 
-FINISHED_PROGRESS_STR = "█"
-UN_FINISHED_PROGRESS_STR = " "
+FINISHED_PROGRESS_STR = "▅"
+UN_FINISHED_PROGRESS_STR = "▁"
 DOWNLOAD_LOCATION = "/app"
-MAHI_NAME = "**MAHI®**"
 
 async def progress_for_pyrogram(
     current,
@@ -34,35 +33,48 @@ async def progress_for_pyrogram(
         elapsed_time = TimeFormatter(milliseconds=elapsed_time)
         estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
 
-        progress = "🔃 📤 𝔽𝕀𝕃𝔼 𝕊𝕐ℕℂ 📤 🔃\n ├ •**Expect The Unexpected🫰❤️‍🔥**•┤\n ├[{0}{1}] | {2}%\n ├❤️‍🔥\n ├📁 GROSSS: {3} of {4}\n ├⚡\n ├🚀 Speed: {5}/s\n ├📟\n ├🕒 ETA: {6}".format(
-            ''.join([FINISHED_PROGRESS_STR for i in range(math.floor(percentage / 10))]),
-            ''.join([UN_FINISHED_PROGRESS_STR for i in range(10 - math.floor(percentage / 10))]),
-            round(percentage, 2),
-            humanbytes(current),
-            humanbytes(total),
-            humanbytes(speed),
-            estimated_total_time if estimated_total_time != '' else "0 s"
-        )
+        # Circle progress bar formatting
+        progress_bar_length = 10
+        completed_length = math.floor(percentage / (100 / progress_bar_length))
+        remaining_length = progress_bar_length - completed_length
+        progress_bar = "┣┈𖨠⏳➤["
+        progress_bar += FINISHED_PROGRESS_STR * completed_length
+        progress_bar += UN_FINISHED_PROGRESS_STR * remaining_length
+        progress_bar += f"] | {round(percentage, 2)}%"
+
+        # Enhanced visual appearance
+        progress = f"""╔════❰ 📤 𝔽𝕀𝕃𝔼 𝕊𝕐ℕℂ 📤❱═❍⊱❁۪۪
+║╭━━━━━━━━━━━━━━━━━━━━➣
+║┣༻°•**𝑬𝒙𝒑𝒆𝒄𝒕 𝑻𝒉𝒆 𝑼𝒏𝒆𝒙𝒑𝒆𝒄𝒕𝒆𝒅🫰❤️‍🔥**•°༺
+║┃┗━━━━•❃°•🅜🅐🅗🅘•°❃•━━━━┛
+║┃
+{progress}
+║┃
+║┣⪼𖨠📁 𝙂𝒓𝙤𝒔𝙨: {humanbytes(current)} 𝒐𝒇 {humanbytes(total)} 𝑴𝑩
+║┃
+║┣⪼𖨠🚀➤ 𝙎𝒑𝙚𝒆𝙙: {humanbytes(speed)}/s
+║┃
+║┣⪼𖨠📟 ➤𝙀𝑻𝘼: {estimated_total_time if estimated_total_time != '' else "0 s"}
+║╰━━━━━━━━━━━━━━━━━━━➣ 
+╚═════❰ 𝙇𝑶𝘼𝑫𝙄𝑵𝙂⚡❱════❍⊱❁"""
 
         try:
             if not message.photo:
                 await message.edit_text(
-                    text="{}\n {}".format(
+                    text="{}\n{}".format(
                         ud_type,
                         progress
                     )
                 )
             else:
                 await message.edit_caption(
-                    caption="{}\n {}".format(
+                    caption="{}\n{}".format(
                         ud_type,
                         progress
                     )
                 )
         except:
             pass
-
-# Add your existing helper functions here
 
 def humanbytes(size):
     if not size:
