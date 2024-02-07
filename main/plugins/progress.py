@@ -3,9 +3,11 @@ import os
 import time
 import json
 
-FINISHED_PROGRESS_STR = "▅"
-UN_FINISHED_PROGRESS_STR = "▁"
+FINISHED_PROGRESS_STR = "▓"
+UN_FINISHED_PROGRESS_STR = "▰"
 DOWNLOAD_LOCATION = "/app"
+
+
 
 async def progress_for_pyrogram(
     current,
@@ -43,21 +45,8 @@ async def progress_for_pyrogram(
         progress_bar += f"] | {round(percentage, 2)}%"
 
         # Enhanced visual appearance
-        progress_str = f"""╔════❰ 📤 𝔽𝕀𝕃𝔼 𝕊𝕐ℕℂ 📤❱═❍⊱❁۪۪
-║╭━━━━━━━━━━━━━━━━━━━━➣
-║┣༻°•**𝑬𝒙𝒑𝒆𝒄𝒕 𝑻𝒉𝒆 𝑼𝒏𝒆𝒙𝒑𝒆𝒄𝒕𝒆𝒅🫰❤️‍🔥**•°༺
-║┃┗━━━━•❃°•🅜🅐🅗🅘•°❃•━━━━┛
-║┃
-{progress_bar}
-║┃
-║┣⪼𖨠📁 𝙂𝒓𝙤𝒔𝙨: {humanbytes(current)} 𝒐𝒇 {humanbytes(total)} 𝑴𝑩
-║┃
-║┣⪼𖨠🚀➤ 𝙎𝒑𝙚𝒆𝙙: {humanbytes(speed)}/s
-║┃
-║┣⪼𖨠📟 ➤𝙀𝑻𝘼: {estimated_total_time if estimated_total_time != '' else "0 s"}
-║╰━━━━━━━━━━━━━━━━━━━➣ 
-╚═════❰ 𝙇𝑶𝘼𝑫𝙄𝑵𝙂⚡❱════❍⊱❁"""
-
+        
+        progress_str = f"""╔════❰ 📤 𝔽𝕀𝕃𝔼 𝕊𝕐ℕℂ 📤❱═❍⊱❁۪۪\n║╭━━━━━━━━━━━━━━━━━━━━➣\n║┣༻°•**𝑬𝒙𝒑𝒆𝒄𝒕 𝑻𝒉𝒆 𝑼𝒏𝒆𝒙𝒑𝒆𝒄𝒕𝒆𝒅🫰❤️‍🔥**•°༺\n║┃┗━━━━•❃°•🅜🅐🅗🅘•°❃•━━━━┛\n║┃\n{progress_bar}\n║┃\n║┣⪼𖨠📁 𝙂𝒓𝙤𝒔𝙨: {humanbytes(current)} 𝒐𝒇 {humanbytes(total)} 𝑴𝑩\n║┃\n║┣⪼𖨠🚀➤ 𝙎𝒑𝙚𝒆𝙙: {humanbytes(speed)}/s\n║┃\n║┣⪼𖨠📟 ➤𝙀𝑻𝘼: {estimated_total_time if estimated_total_time != '' else "0 s"}\n║╰━━━━━━━━━━━━━━━━━━━➣ \n╚═════❰ 𝙇𝑶𝘼𝑫𝙄𝑵𝙂⚡❱════❍⊱❁"""
         # Check if the progress message has changed
         if progress_str != message.text:
             try:
@@ -75,14 +64,8 @@ async def progress_for_pyrogram(
                             progress_str
                         )
                     )
-            except:
-                pass
-
             except Exception as e:
                 print(f"Error while updating progress: {e}")
-
-
-
 
 def humanbytes(size):
     if not size:
@@ -105,3 +88,4 @@ def TimeFormatter(milliseconds: int) -> str:
         ((str(minutes) + "m, ") if minutes else "") + \
         ((str(seconds) + "s, ") if seconds else "")
     return tmp[:-2]
+
