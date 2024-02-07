@@ -23,8 +23,8 @@ async def progress_for_pyrogram(
         if os.path.exists(status):
             with open(status, 'r+') as f:
                 statusMsg = json.load(f)
-                if not statusMsg["running"]:
-                    bot.stop_transmission()
+                if not statusMsg.get("running", True):
+                    await bot.stop_transmission()
         speed = current / diff
         elapsed_time = round(diff) * 1000
         time_to_completion = round((total - current) / speed) * 1000
@@ -59,7 +59,7 @@ async def progress_for_pyrogram(
 ╚═════❰ 𝙇𝑶𝘼𝑫𝙄𝑵𝙂⚡❱════❍⊱❁"""
 
         try:
-            if not message.photo:
+            if hasattr(message, 'photo') and not message.photo:
                 await message.edit_text(
                     text="{}\n{}".format(
                         ud_type,
@@ -73,8 +73,8 @@ async def progress_for_pyrogram(
                         progress
                     )
                 )
-        except:
-            pass
+        except Exception as e:
+            print(f"Error while updating progress: {e}")
 
 def humanbytes(size):
     if not size:
