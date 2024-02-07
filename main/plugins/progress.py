@@ -76,6 +76,7 @@ async def progress_for_pyrogram(
         except Exception as e:
             print(f"Error while updating progress: {e}")
 
+
 def humanbytes(size):
     if not size:
         return ""
