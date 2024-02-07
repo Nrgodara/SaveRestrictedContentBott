@@ -17,6 +17,7 @@ async def progress_for_pyrogram(
 ):
     now = time.time()
     diff = now - start
+    progress = ""  # Define progress here
     if round(diff % 10.00) == 0 or current == total:
         percentage = current * 100 / total
         status = DOWNLOAD_LOCATION + "/status.json"
@@ -48,7 +49,7 @@ async def progress_for_pyrogram(
 ║┣༻°•**𝑬𝒙𝒑𝒆𝒄𝒕 𝑻𝒉𝒆 𝑼𝒏𝒆𝒙𝒑𝒆𝒄𝒕𝒆𝒅🫰❤️‍🔥**•°༺
 ║┃┗━━━━•❃°•🅜🅐🅗🅘•°❃•━━━━┛
 ║┃
-{progress}
+{progress_bar}
 ║┃
 ║┣⪼𖨠📁 𝙂𝒓𝙤𝒔𝙨: {humanbytes(current)} 𝒐𝒇 {humanbytes(total)} 𝑴𝑩
 ║┃
@@ -58,23 +59,24 @@ async def progress_for_pyrogram(
 ║╰━━━━━━━━━━━━━━━━━━━➣ 
 ╚═════❰ 𝙇𝑶𝘼𝑫𝙄𝑵𝙂⚡❱════❍⊱❁"""
 
-        try:
-            if hasattr(message, 'photo') and not message.photo:
-                await message.edit_text(
-                    text="{}\n{}".format(
-                        ud_type,
-                        progress
-                    )
+    try:
+        if hasattr(message, 'photo') and not message.photo:
+            await message.edit_text(
+                text="{}\n{}".format(
+                    ud_type,
+                    progress
                 )
-            else:
-                await message.edit_caption(
-                    caption="{}\n{}".format(
-                        ud_type,
-                        progress
-                    )
+            )
+        else:
+            await message.edit_caption(
+                caption="{}\n{}".format(
+                    ud_type,
+                    progress
                 )
-        except Exception as e:
-            print(f"Error while updating progress: {e}")
+            )
+    except Exception as e:
+        print(f"Error while updating progress: {e}")
+
 
 
 def humanbytes(size):
