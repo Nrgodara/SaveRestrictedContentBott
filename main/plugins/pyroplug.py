@@ -1,8 +1,4 @@
-
-# Github.com-Vasusen-code
-
-import os
-import asyncio, time
+import asyncio, time, os
 
 from .. import bot as Drone
 from main.plugins.progress import progress_for_pyrogram
@@ -15,19 +11,6 @@ from ethon.pyfunc import video_metadata
 from ethon.telefunc import fast_upload
 from telethon.tl.types import DocumentAttributeVideo
 from telethon import events
-
-# Define custom caption
-custom_caption = os.getenv("custom_caption", (
-    "{filename} 🧿 \n"
-    "Batch Name : SBA PSI 👮‍♂️ (2023) latest \n"
-    "𝑬𝒙𝒕𝒓𝒂𝒄𝒕𝒆𝒅 𝑩𝒚 » 𝑴𝑨𝑯𝑰®🇮🇳\n"
-    "•┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈•\n"
-    "𝔼𝕏ℙ𝔼ℂ𝕋 𝕋ℍ𝔼 𝕌ℕ𝔼𝕏ℙ𝔼ℂ𝕋𝔼𝔻 🫰❤️‍🔥\n"
-    "•┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈•"
-))
-
-# Rest of your code goes here
-
 
 def thumbnail(sender):
     if os.path.exists(f'{sender}.jpg'):
@@ -81,8 +64,15 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
             )
             print(file)
             await edit.edit('Preparing to Upload👌')
-            caption = custom_caption
-
+            
+            # Get custom caption from Heroku config vars or set a default value
+            custom_caption = os.getenv("CUSTOM_CAPTION", "Default Custom Caption")
+            
+            # Concatenate filename placeholder with custom caption
+            caption = f"{filename} + {custom_caption}"
+            
+            if msg.caption is not None:
+                caption = msg.caption
             if msg.media==MessageMediaType.VIDEO_NOTE:
                 round_message = True
                 print("Trying to get metadata")
