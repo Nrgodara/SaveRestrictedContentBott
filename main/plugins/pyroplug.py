@@ -1,4 +1,4 @@
-#Github.com-Vasusen-code
+# Github.com-Vasusen-code
 
 import asyncio, time, os
 
@@ -18,8 +18,8 @@ def thumbnail(sender):
     if os.path.exists(f'{sender}.jpg'):
         return f'{sender}.jpg'
     else:
-         return None
-      
+        return None
+
 async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
     
     """ userbot: PyrogramUserBot
@@ -46,9 +46,10 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
     file = ""
     try:
         msg = await userbot.get_messages(chat, msg_id)
+        # Rest of your code...
 
         if msg.media:
-            if msg.media==MessageMediaType.WEB_PAGE:
+            if msg.media == MessageMediaType.WEB_PAGE:
                 edit = await client.edit_message_text(sender, edit_id, "Cloning❤️‍🔥")
                 await client.send_message(sender, msg.text.markdown)
                 await edit.delete()
@@ -75,7 +76,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
         caption = "{filename} 🧿 \nBatch Name : SBA PSI 👮‍♂️ (2023) latest \n𝑬𝒙𝒕𝒓𝒂𝒄𝒕𝒆𝒅 𝑩𝒚 » 𝑴𝑨𝑯𝑰®🇮🇳\n•┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈•\n𝔼𝕏ℙ𝔼ℂ𝕋 𝕋ℍ𝔼 𝕌ℕ𝔼𝕏ℙ𝔼ℂ𝕋𝔼𝔻 🫰❤️‍🔥\n•┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈•"
         if msg.caption is not None:
             caption = msg.caption
-        if msg.media==MessageMediaType.VIDEO_NOTE:
+        if msg.media == MessageMediaType.VIDEO_NOTE:
             round_message = True
             print("Trying to get metadata")
             data = video_metadata(file)
@@ -98,7 +99,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
                     time.time()
                 )
             )
-        elif msg.media==MessageMediaType.VIDEO and msg.video.mime_type in ["video/mp4", "video/x-matroska"]:
+        elif msg.media == MessageMediaType.VIDEO and msg.video.mime_type in ["video/mp4", "video/x-matroska"]:
             print("Trying to get metadata")
             data = video_metadata(file)
             height, width, duration = data["height"], data["width"], data["duration"]
@@ -123,7 +124,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
                 )
             )
         
-        elif msg.media==MessageMediaType.PHOTO:
+        elif msg.media == MessageMediaType.PHOTO:
             await edit.edit("Uploading photo.")
             await bot.send_file(sender, file, caption=caption)
         else:
@@ -166,12 +167,12 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
         or "SendMediaRequest" in str(e) \
         or str(e) == "File size equals to 0 B":
             try: 
-                if msg.media==MessageMediaType.VIDEO and msg.video.mime_type in ["video/mp4", "video/x-matroska"]:
+                if msg.media == MessageMediaType.VIDEO and msg.video.mime_type in ["video/mp4", "video/x-matroska"]:
                     UT = time.time()
                     uploader = await fast_upload(f'{file}', f'{file}', UT, bot, edit, '**UPLOADING:**')
                     attributes = [DocumentAttributeVideo(duration=duration, w=width, h=height, round_message=round_message, supports_streaming=True)] 
                     await bot.send_file(sender, uploader, caption=caption, thumb=thumb_path, attributes=attributes, force_document=False)
-                elif msg.media==MessageMediaType.VIDEO_NOTE:
+                elif msg.media == MessageMediaType.VIDEO_NOTE:
                     uploader = await fast_upload(f'{file}', f'{file}', UT, bot, edit, '**UPLOADING:**')
                     attributes = [DocumentAttributeVideo(duration=duration, w=width, h=height, round_message=round_message, supports_streaming=True)] 
                     await bot.send_file(sender, uploader, caption=caption, thumb=thumb_path, attributes=attributes, force_document=False)
@@ -219,7 +220,7 @@ else:
         
         return await client.edit_message_text(sender, edit_id, f'Skipped... \n\nError: {str(e)}')
     await edit.delete()
-    
+
 async def get_bulk_msg(userbot, client, sender, msg_link, i):
     x = await client.send_message(sender, "Processing⏳")
     await get_msg(userbot, client, Drone, sender, x.id, msg_link, i)
