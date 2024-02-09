@@ -1,23 +1,9 @@
-import asyncio, time, os
+import os
 
-from .. import bot as Drone
-from main.plugins.progress import progress_for_pyrogram
-from main.plugins.helpers import screenshot
+# Function to extract filename from file path
+def extract_filename(file_path):
+    return os.path.basename(file_path)
 
-from pyrogram import Client, filters
-from pyrogram.errors import ChannelBanned, ChannelInvalid, ChannelPrivate, ChatIdInvalid, ChatInvalid, PeerIdInvalid
-from pyrogram.enums import MessageMediaType
-from ethon.pyfunc import video_metadata
-from ethon.telefunc import fast_upload
-from telethon.tl.types import DocumentAttributeVideo
-from telethon import events
-
-def thumbnail(sender):
-    if os.path.exists(f'{sender}.jpg'):
-        return f'{sender}.jpg'
-    else:
-         return None
-      
 async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
     
     """ userbot: PyrogramUserBot
@@ -67,6 +53,9 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
             
             # Get custom caption from Heroku config vars or set a default value
             custom_caption = os.getenv("CUSTOM_CAPTION", "Default Custom Caption")
+            
+            # Extract filename from file path
+            filename = extract_filename(file)
             
             # Concatenate filename placeholder with custom caption
             caption = f"{filename} + {custom_caption}"
@@ -221,3 +210,4 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
 async def get_bulk_msg(userbot, client, sender, msg_link, i):
     x = await client.send_message(sender, "Processing⏳")
     await get_msg(userbot, client, Drone, sender, x.id, msg_link, i)
+
