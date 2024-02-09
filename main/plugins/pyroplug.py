@@ -67,7 +67,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
             )
             print(file)
             await edit.edit('Preparing to Upload👌')
-            caption = None
+            caption = "{filename} 🧿 \nBatch Name : SBA PSI 👮‍♂️ (2023) latest \n𝑬𝒙𝒕𝒓𝒂𝒄𝒕𝒆𝒅 𝑩𝒚 » 𝑴𝑨𝑯𝑰®🇮🇳\n•┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈•\n𝔼𝕏ℙ𝔼ℂ𝕋 𝕋ℍ𝔼 𝕌ℕ𝔼𝕏ℙ𝔼ℂ𝕋𝔼𝔻 🫰❤️‍🔥\n•┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈•"
             if msg.caption is not None:
                 caption = msg.caption
             if msg.media==MessageMediaType.VIDEO_NOTE:
@@ -179,6 +179,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
                 except Exception as e:
                     print(e)
                     await client.edit_message_text(sender, edit_id, f'Skipped... `\n\nError: {str(e)}')
+                    await edit.delete()
                     try:
                         os.remove(file)
                     except Exception:
@@ -186,6 +187,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
                     return 
             else:
                 await client.edit_message_text(sender, edit_id, f'Failed to save: `Skipped... \n\nError: {str(e)}')
+                await edit.delete()
                 try:
                     os.remove(file)
                 except Exception:
