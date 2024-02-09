@@ -34,14 +34,21 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
         msg_link = msg_link.split("?single")[0]
     msg_id = int(msg_link.split("/")[-1]) + int(i)
     height, width, duration, thumb_path = 90, 90, 0, None
-    if 't.me/c/' or 't.me/b/' in msg_link:
-        if 't.me/b/' in msg_link:
-            chat = str(msg_link.split("/")[-2])
-        else:
-            chat = int('-100' + str(msg_link.split("/")[-2]))
-        file = ""
-        try:
-            msg = await userbot.get_messages(chat, msg_id)
+    
+    # Handling messages from supergroups
+    if len(msg_link.split("/")) > 6:
+        chat = int('-100' + msg_link.split("/")[3])
+    elif 't.me/c/' in msg_link:
+        chat = str(msg_link.split("/")[-2])
+    elif 't.me/b/' in msg_link:
+        chat = str(msg_link.split("/")[-2])
+        chat = int('-100' + chat)
+    
+    file = ""
+    try:
+        msg = await userbot.get_messages(chat, msg_id)
+        
+        
             if msg.media:
                 if msg.media==MessageMediaType.WEB_PAGE:
                     edit = await client.edit_message_text(sender, edit_id, "Cloning❤️‍🔥")
