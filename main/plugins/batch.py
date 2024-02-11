@@ -86,7 +86,7 @@ async def run_batch(userbot, client, sender, link, _range):
             timer = 5
         if i < 50 and i > 25:
             timer = 10
-        if i < 100 and i > 50:
+        if i < 1000 and i > 50:
             timer = 15
         if not 't.me/c/' in link:
             if i < 25:
@@ -110,6 +110,6 @@ async def run_batch(userbot, client, sender, link, _range):
             await asyncio.sleep(fw.value + 5) # Wait N seconds before continuing
             await get_bulk_msg(userbot, client, sender, link, i)
 
-        protection = await client.send_message(sender, f"Sleeping 🥱 for `{timer}` seconds to avoid Floodwaits👌 and Protect account!")
+        #protection = await client.send_message(sender, f"Sleeping 🥱 for `{timer}` seconds to avoid Floodwaits👌 and Protect account!")
         await asyncio.sleep(timer)
-        await protection.delete()
+        #await protection.delete()
