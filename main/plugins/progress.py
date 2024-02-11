@@ -39,14 +39,14 @@ async def progress_for_pyrogram(
         progress_bar_length = 10
         completed_length = math.floor(percentage / (100 / progress_bar_length))
         remaining_length = progress_bar_length - completed_length
-        progress_bar = "┈𖨠⏳➤["
+        progress_bar = "┈⏳➤["
         progress_bar += FINISHED_PROGRESS_STR * completed_length
         progress_bar += UN_FINISHED_PROGRESS_STR * remaining_length
         progress_bar += f"] | {round(percentage, 2)}%"
 
         # Enhanced visual appearance
         
-        progress_str = f"""╔════❰ 📤 𝔽𝕀𝕃𝔼 𝕊𝕐ℕℂ 📤❱═❍⊱❁۪۪\n║╭━━━━━━━━━━━━━━━━━━━━➣\n║┣༻°•**𝑬𝒙𝒑𝒆𝒄𝒕 𝑻𝒉𝒆 𝑼𝒏𝒆𝒙𝒑𝒆𝒄𝒕𝒆𝒅🫰❤️‍🔥**•°༺\n║┃┗━━━━•❃°•🅜🅐🅗🅘•°❃•━━━━┛\n║┃{progress_bar}\n║┃\n║┣⪼𖨠📁 𝙂𝒓𝙤𝒔𝙨: {humanbytes(current)} 𝒐𝒇 {humanbytes(total)} 𝑴𝑩\n║┃\n║┣⪼𖨠🚀➤ 𝙎𝒑𝙚𝒆𝙙: {humanbytes(speed)}/s\n║┃\n║┣⪼𖨠📟 ➤𝙀𝑻𝘼: {estimated_total_time if estimated_total_time != '' else "0 s"}\n║╰━━━━━━━━━━━━━━━━━━━➣ \n╚═════❰ 𝙇𝑶𝘼𝑫𝙄𝑵𝙂⚡❱════❍⊱❁"""
+        progress_str = f"""╔════❰ 📤 𝔽𝕀𝕃𝔼 𝕊𝕐ℕℂ 📤❱═❍⊱❁۪۪\n║╭━━━━━━━━━━━━━━━━━━━━➣\n║┣༻°**𝑬𝒙𝒑𝒆𝒄𝒕 𝑻𝒉𝒆 𝑼𝒏𝒆𝒙𝒑𝒆𝒄𝒕𝒆𝒅🫰❤️‍🔥**°༺\n║┃┗━━━━•❃°•🅜🅐🅗🅘•°❃•━━━━┛\n║┃{progress_bar}\n║┃\n║┣⪼𖨠📁 𝙂𝒓𝙤𝒔𝙨: {humanbytes(current)}𝒐𝒇{humanbytes(total)}\n║┃\n║┣⪼𖨠🚀➤ 𝙎𝒑𝙚𝒆𝙙: {humanbytes(speed)}/s\n║┃\n║┣⪼𖨠📟 ➤𝙀𝑻𝘼: {estimated_total_time if estimated_total_time != '' else "0 s"}\n║╰━━━━━━━━━━━━━━━━━━━➣ \n╚═════❰ 𝙇𝑶𝘼𝑫𝙄𝑵𝙂⚡❱════❍⊱❁"""
         # Check if the progress message has changed
         if progress_str != message.text:
             try:
