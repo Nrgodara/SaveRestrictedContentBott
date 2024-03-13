@@ -1,5 +1,14 @@
+<p align="center">
+  <img src="https://graph.org/file/9c1abcc5a8b3b69722393.jpg" alt="VJ-Filter-Bot Logo">
+</p>
 <h1 align="center">
-  <b>Save restricted content Bot</b>
+  MAHI_BOSS
+</h1>
+
+![Typing SVG](https://readme-typing-svg.herokuapp.com/?lines=𝑊𝑒𝑙𝑐𝑜𝑚𝑒+𝑇𝑜+MAHI_BOSS's_Bot_Store;𝐴+𝑠𝑖𝑚𝑝𝑙𝑒+𝑎𝑛𝑑+𝑝𝑜𝑤𝑒𝑟𝑓𝑢𝑙+𝐵𝑜𝑡!;𝑻𝒐+𝑺𝒂𝒗𝒆+𝑹𝒆𝒔𝒕𝒓𝒊𝒄𝒕𝒆𝒅+𝑴𝒆𝒅𝒊𝒂/𝑴𝒆𝒔𝒔𝒂𝒈𝒆𝒔+𝑭𝒓𝒐𝒎+𝑨𝒏𝒚+𝑷𝒖𝒃𝒍𝒊𝒄+𝑶𝒓+𝑷𝒓𝒊𝒗𝒂𝒕𝒆+𝑪𝒉𝒂𝒏𝒏𝒆𝒍;𝐴𝑛𝑑+𝑚𝑜𝑟𝑒+𝑓𝑒𝑎𝑡𝑢𝑟𝑒𝑠!)
+</p>
+<h1 align="center">
+  <b>Save restricted content Bot by MAHI®</b>
 </h1> 
 
 Contact: [Telegram](https://t.me/MaheshChauhan)
