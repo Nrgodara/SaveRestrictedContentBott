@@ -25,7 +25,7 @@ async def sett(event):
                 if not 'jpeg' in mime:
                     return await xx.edit("No image found🫣.")
         await xx.delete()
-        t = await event.client.send_message(event.chat_id, 'Trying.')
+        t = await event.client.send_message(event.chat_id, 'Trying....⏳')
         path = await event.client.download_media(x.media)
         if os.path.exists(f'{event.sender_id}.jpg'):
             os.remove(f'{event.sender_id}.jpg')
@@ -35,18 +35,18 @@ async def sett(event):
 @Drone.on(events.callbackquery.CallbackQuery(data="rem"))
 async def remt(event):  
     Drone = event.client            
-    await event.edit('Trying.')
+    await event.edit('Trying....!')
     try:
         os.remove(f'{event.sender_id}.jpg')
-        await event.edit('Removed!❌')
+        await event.edit('Removed🥳')
     except Exception:
-        await event.edit("No thumbnail saved.🔎")                        
+        await event.edit("No thumbnail saved🔎")                        
   
 @Drone.on(events.NewMessage(incoming=True, pattern=f"{S}"))
 async def start(event):
-    user_mention = f"[{event.sender_id}](tg://user?id={event.sender_id})"
+    user_mention = f"[{event.sender_name}](tg://user?id={event.sender_id})"
     text = (
-        f"Hey,**MAHI®**! 🤭\n"
+        f"Hey,[user_mention] 🤭\n"
         "Ready to work some magic? ✨ Send me the link of any message, and I'll clone it right here. "
         "For private channel messages, don't forget to send the invite link first. 😉\n\n"
         "**𝔼𝕏ℙ𝔼ℂ𝕋 𝕋ℍ𝔼 𝕌ℕ𝔼𝕏ℙ𝔼ℂ𝕋𝔼𝔻 🫰❤️‍🔥**"
