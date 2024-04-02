@@ -185,7 +185,7 @@ async def get_msg(userbot, client, bot, sender, edit_id, msg_link, i):
                         return
                     return 
             else:
-                await #client.edit_message_text(sender, edit_id, f'Failed to save: `Skipped... \n\nError: {str(e)}')
+                #await #client.edit_message_text(sender, edit_id, f'Failed to save: `Skipped... \n\nError: {str(e)}')
                 try:
                     os.remove(file)
                 except Exception:
