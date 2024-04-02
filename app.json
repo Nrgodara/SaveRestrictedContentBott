@@ -1,15 +1,15 @@
 {
     "name": "Save restricted content bot",
-    "description": "Telegram bot to save restricted content.",
+    "description": "Telegram bot to save restricted content with custom thumbnail support made by MAHI®.",
     "logo": "",
     "keywords": [
         "telegram",
         "Save restricted content",
         "bot"
     ],
-    "repository": "https://github.com/vasusen-code/SaveRestrictedContentBot",
+    "repository": "https://github.com/Nrgodara/SaveRestrictedContentBott",
     "website": "",
-    "success_url": "https://t.me/DroneBots",
+    "success_url": "https://t.me/defence_exams_all",
     "env": {
         "API_HASH": {
             "description": "Your API HASH from my.telegram.org",
